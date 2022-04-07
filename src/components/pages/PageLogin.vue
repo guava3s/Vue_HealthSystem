@@ -12,7 +12,7 @@
       <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码"></el-input>
     </el-form-item>
     <el-form-item class="login-submit">
-      <el-button type="primary" @click="login">登录</el-button>
+      <el-button type="primary" @click="loginHandler">登录</el-button>
       <el-button type="success" @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
     <el-form-item>
@@ -65,7 +65,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    login() {
+    loginHandler() {
       let _this = this;
       // 使用别名配置请求
       this.$http.post('/user/login', {
