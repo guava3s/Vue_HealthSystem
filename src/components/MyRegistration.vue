@@ -8,23 +8,22 @@
     <div class="login-wrap">
       <p>Enter your personal details below</p>
       <input type="text" autofocus="" placeholder="Full Name" class="form-control" v-model="username">
-      <input type="text" autofocus="" placeholder="Address" class="form-control" v-model="native">
+      <input type="text" autofocus="" placeholder="Address" class="form-control" v-model="Address">
       <input type="text" autofocus="" placeholder="Phone" class="form-control" v-model="phone">
-      <input type="text" autofocus="" placeholder="Password" class="form-control" v-model="password">
       <input type="text" autofocus="" placeholder="age" class="form-control" v-model="age">
       <div class="radios">
         <label for="radio-01" class="label_radio col-lg-6 col-sm-6">
-          <input type="radio" checked="" value="1" id="radio-01" name="sample-radio"> Male
+          <input type="radio" checked="" value="1" id="radio-01" name="sample-radio" v-model="gender"> Male
         </label>
         <label for="radio-02" class="label_radio col-lg-6 col-sm-6">
-          <input type="radio" value="1" id="radio-02" name="sample-radio"> Female
+          <input type="radio" value="0" id="radio-02" name="sample-radio" v-model="gender"> Female
         </label>
       </div>
 
       <p> Enter your account details below</p>
-      <input type="text" autofocus="" placeholder="User Name" class="form-control">
+<!--      <input type="text" autofocus="" placeholder="User Name" class="form-control">-->
       <input type="password" placeholder="Password" class="form-control">
-      <input type="password" placeholder="Re-type Password" class="form-control">
+      <input type="password" placeholder="Re-type Password" class="form-control" v-model="password">
       <label class="checkbox">
         <input type="checkbox" value="agree this condition"> I agree to the Terms of Service and Privacy Policy
       </label>
@@ -52,9 +51,10 @@ export default {
     return {
       username: '',
       phone: '',
-      password:'',
-      native: '',
-      age: ''
+      password: '',
+      Address: '',
+      age: '',
+      gender: ''
     }
   },
   methods: {
@@ -66,8 +66,10 @@ export default {
         data: {
           username: _this.username,
           phoneNumber: _this.phone,
-          native: _this.native,
-          age: _this.age
+          password: _this.password,
+          native: _this.Address,
+          age: _this.age,
+          gender: _this.gender
         }
       });
     }
