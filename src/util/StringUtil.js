@@ -5,7 +5,7 @@ function isNull(str) {
 }
 // 传递的JSON对象所有值都不为空
 function anyNull(formData) {
-    for (var v in formData) {
+    for (let v in formData) {
         if(formData[v] === ''){
             return true;
         }
