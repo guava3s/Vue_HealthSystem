@@ -1,26 +1,25 @@
 <template>
-
   <div>
-    <!--    <MyLogin/>-->
-    <!--    <MyRegistration/>-->
     <PageLogin></PageLogin>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 
-import PageLogin from "@/components/pages/PageLogin";
+
+import PageLogin from "@/pages/PageLogin";
 
 export default {
   name: 'App',
-  components: {
-    PageLogin
-  }
+  components: {PageLogin}
 }
 </script>
 
 <style>
-body {
-  background-image: url("../static/background3.jpg");
+.item-text .el-form-item__label {
+  color: #1fb5ac;
+  margin-bottom: 0px;
 }
+
 </style>
