@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="phoneNumber">
+    <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="code">
       <el-button id="login-verify-send" slot="append" @click="getCode" :disabled="state">{{ content }}</el-button>
     </el-input>
   </div>
@@ -9,22 +9,24 @@
 <script>
 
 
-import {success} from "@/util/prompt";
+import {prompts} from "@/util/mixin_prompt";
 
 export default {
   name: "MyVerify",
+  mixins: [prompts],
+  props: ['phone'],
   data() {
     return {
       content: '获取验证码',
+      code: '',
       phoneNumber: this.phone,
       state: false,
       totalTime: 60
     }
   },
-  props: ['phone'],
   methods: {
     getCode() {
-      success.methods.successPrompt('发送成功');
+      prompts.methods.successPrompt('发送成功');
       // 60s倒数
       this.state = true;//点击之后设置按钮不可取
       this.content = this.totalTime + "s";//按钮内文本
@@ -42,7 +44,11 @@ export default {
       console.log("向后端请求验证码");
     }
   },
-  mixins: [success]
+  watch: {
+    code(newValue) {
+      this.$bus.$emit('returnVerifyCode', newValue);
+    }
+  }
 }
 </script>
 

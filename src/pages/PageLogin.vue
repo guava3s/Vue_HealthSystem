@@ -16,7 +16,7 @@
         <router-view></router-view>
       </el-form-item>
 
-      <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">免密登录</el-link>&nbsp;
+      <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">{{ loginModel }}</el-link>&nbsp;
       <br>
       <!--登录按钮-->
       <el-button :type="loginBtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
@@ -40,48 +40,64 @@
 </template>
 
 <script>
-import {anyNull} from "@/util/StringUtil";
-import {success} from "@/util/prompt";
-import {background} from "@/util/background";
+import {prompts} from "@/util/mixin_prompt";
+import {mixin_background} from "@/util/mixin_background";
+import {allTrue, anyExcept} from "@/util/StringUtil";
 
 export default {
   name: "PageLogin",
   data() {
     return {
-
       loginState: 'el-icon-lock', // 登录状态
       loginBtnState: 'info',
+      loginModel: '免密登录',
+      loginModelMark: false,
+      mark: { // 标记属性
+        markPhone: false, // 标记phone
+        markOther: false, // 标记密码与短信验证码
+        markCheck: false  // 标记是否勾选
+      },
       ruleForm: {
         pass: '',
         check: '',
         phone: '',
-      }
+      },
+      verifyCode: ''
     };
   },
-  mixins: [success, background],
+  mixins: [mixin_background],
   methods: {
     // 登录
     loginHandle() {
-      if (anyNull(this.ruleForm)) {
+      if (!allTrue(this.mark)) {
         return alert("请填写完整");
       } else {
         // 修改登录图标 为登录中
         this.loginState = 'el-icon-loading';
-        console.log("PageLogin组件 ruleForm.phone为：", this.ruleForm.phone);
-        console.log("PageLogin组件 ruleForm.pass为：", this.ruleForm.pass);
+        // 裁决登录方式
+        let url = '/user/phone_lg';
+        if (this.ruleForm.pass !== '') {
+          url = '/user/pass_lg';
+        }
+        console.log("请求路径是:", url);
         // 登录请求
         this.$http({
-          url: '/user/pass_lg',
+          url: url,
           method: 'post',
           params: {
             phoneNumber: this.ruleForm.phone,
-            password: this.ruleForm.pass
+            verifyCode: this.verifyCode
           }
         }).then(function (data) {
           console.log("后端返回的数据是", data);
-          success.methods.successPrompt('登录成功');
+          // 需要先获取到成功数据才能提示成功
+          prompts.methods.successPrompt('登录成功');
+          this.$router.push({
+            name: 'r-container'
+          });
         }).catch(function (data) {
           console.log("异常信息为:", data);
+          prompts.methods.errorPrompt('登录失败');
         });
       }
     },
@@ -91,25 +107,87 @@ export default {
         name: 'r-register'
       });
     },
-    // 免密登录
+    // 点击事件:免密登录
     verifyLoginHandle() {
-      this.$router.replace({
-        name: 'r-verify',
-        params: {
-          phone: this.ruleForm.phone
-        }
-      });
+      this.loginModelMark = !this.loginModelMark;
+      if (this.loginModelMark) {
+        this.loginModel = '密码登录';
+        this.$router.replace({
+          name: 'r-verify',
+          params: {
+            phone: this.ruleForm.phone
+          }
+        });
+      } else {
+        this.loginModel = '免密登录';
+        this.$router.replace({
+          name: 'r-password',
+          params: {
+            state: this.loginState
+          }
+        });
+      }
     },
     // 从MyPassword组件中获取用户输入的密码
     getPassword(pd) {
       this.ruleForm.pass = pd;
+      this.verifyCode = pd;
+      this.setMarkOther(pd);
+    },
+    // 从MyVerify组件获取用户输入的验证码
+    getVerifyCode(vc) {
+      this.verifyCode = vc;
+      this.setMarkOther(vc);
+    },
+    setMarkOther(data) {
+      if (data !== '') {
+        this.mark.markOther = true;
+      } else {
+        this.mark.markOther = false;
+      }
     }
+  },
+  watch: {
+    // 监视标记属性变化
+    mark: {
+      deep: true,
+      handler() {
+        if (anyExcept(this.mark)) {
+          console.log("改变状态");
+          this.loginBtnState = 'success';
+        } else {
+          this.loginBtnState = 'info';
+        }
+      }
+    },
+    // 监视表单项phone值变化
+    'ruleForm.phone': {
+      handler() {
+        if (this.ruleForm.phone !== '') {
+          this.mark.markPhone = true;
+        } else {
+          this.mark.markPhone = false;
+        }
+      }
+    },
+    'ruleForm.check': {
+      handler() {
+        if (this.ruleForm.check) {
+          this.mark.markCheck = true;
+        } else {
+          this.mark.markCheck = false;
+        }
+      }
+    }
+
   },
   // 挂载函数
   mounted() {
     // 绑定返回密码事件
     this.$bus.$on('returnPassWord', this.getPassword);
-    // 初始化路由代理组件为MyPassword组件
+    // 绑定返回验证码事件
+    this.$bus.$on('returnVerifyCode', this.getVerifyCode);
+    // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
     this.$router.replace({
       name: 'r-password',
       params: {
@@ -121,7 +199,7 @@ export default {
   beforeDestroy() {
     // 解除事件绑定
     this.$bus.$off('returnPassWord');
-    console.log("已销毁");
+    this.$bus.$off('returnVerifyCode');
   }
 }
 
@@ -134,7 +212,7 @@ export default {
   background-clip: padding-box;
   margin: 180px auto;
   width: 300px;
-  height: 370px;
+  height: 360px;
   padding: 35px 35px 15px 35px;
   border: 1px solid #eaeaec;
   box-shadow: 0 0 20px #2e3644;
@@ -147,13 +225,6 @@ export default {
   margin: 0px auto 40px auto;
   text-align: center;
   color: #1fb5ac;
-}
-
-/*提交按钮样式*/
-.login-submit {
-  margin: 10px auto 20px;
-  /*设置圆角边框*/
-  border-radius: 7px;
 }
 
 /*复选框字体颜色*/

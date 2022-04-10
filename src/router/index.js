@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 //引入组件
 import PageLogin from "@/pages/PageLogin";
 import PageRegistration from "@/pages/PageRegistration";
+import PageContainer from "@/pages/PageContainer";
 import MyPassword from "@/components/MyPassword";
 import MyVerify from "@/components/MyVerify";
 
@@ -33,7 +34,7 @@ export default new VueRouter({
                     name: 'r-verify',
                     path: 'myVerify/:phone',
                     component: MyVerify,
-                    props:true
+                    props: true
                 }
             ]
         },
@@ -42,6 +43,12 @@ export default new VueRouter({
             name: 'r-register',
             path: '/pageRegistration',
             component: PageRegistration,
+        },
+        // 网站首页
+        {
+            name: 'r-container',
+            path: '/pageContainer',
+            component: PageContainer
         }
     ]
 });

@@ -8,11 +8,11 @@
 </template>
 
 <script>
-import {background} from "@/util/background";
+import {mixin_background} from "@/util/mixin_background";
 
 export default {
   name: "PageRegistration",
-  mixins:[background]
+  mixins:[mixin_background]
 }
 </script>
 

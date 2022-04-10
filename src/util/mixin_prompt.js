@@ -1,6 +1,6 @@
 import {Message} from "element-ui";
 
-const success = {
+const prompts = {
     methods: {
         successPrompt(data) {
             Message({
@@ -9,8 +9,16 @@ const success = {
                 center: true,
                 duration: 1500
             });
+        },
+        errorPrompt(data){
+            Message({
+                message: data,
+                type: 'error',
+                center: true,
+                duration: 1500
+            });
         }
     }
 }
 
-export {success}
+export {prompts}
