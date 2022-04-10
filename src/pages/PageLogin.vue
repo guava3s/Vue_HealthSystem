@@ -132,20 +132,13 @@ export default {
     getPassword(pd) {
       this.ruleForm.pass = pd;
       this.verifyCode = pd;
-      this.setMarkOther(pd);
+      this.mark.markOther = pd !== '';
     },
     // 从MyVerify组件获取用户输入的验证码
     getVerifyCode(vc) {
       this.verifyCode = vc;
-      this.setMarkOther(vc);
+      this.mark.markOther = vc !== '';
     },
-    setMarkOther(data) {
-      if (data !== '') {
-        this.mark.markOther = true;
-      } else {
-        this.mark.markOther = false;
-      }
-    }
   },
   watch: {
     // 监视标记属性变化
@@ -163,23 +156,14 @@ export default {
     // 监视表单项phone值变化
     'ruleForm.phone': {
       handler() {
-        if (this.ruleForm.phone !== '') {
-          this.mark.markPhone = true;
-        } else {
-          this.mark.markPhone = false;
-        }
+        this.mark.markPhone = this.ruleForm.phone !== '';
       }
     },
     'ruleForm.check': {
       handler() {
-        if (this.ruleForm.check) {
-          this.mark.markCheck = true;
-        } else {
-          this.mark.markCheck = false;
-        }
+        this.mark.markCheck = this.ruleForm.check
       }
     }
-
   },
   // 挂载函数
   mounted() {
@@ -233,7 +217,6 @@ export default {
 }
 
 #withoutPass {
-  margin-top: 0px;
   margin-bottom: 10px;
   margin-left: 13px;
 }
