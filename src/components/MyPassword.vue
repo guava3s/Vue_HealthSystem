@@ -1,10 +1,10 @@
 <template>
-  <el-input type="password"
-            v-model="password"
-            autocomplete="off"
-            placeholder="请输入密码"
-            :prefix-icon="state">
-  </el-input>
+    <el-input type="password"
+              v-model="password"
+              autocomplete="off"
+              placeholder="请输入密码"
+              :prefix-icon="state">
+    </el-input>
 </template>
 
 <script>

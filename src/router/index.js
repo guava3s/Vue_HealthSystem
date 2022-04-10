@@ -31,8 +31,9 @@ export default new VueRouter({
                 {
                     // 切换短信验证登录
                     name: 'r-verify',
-                    path: 'myVerify',
-                    component: MyVerify
+                    path: 'myVerify/:phone',
+                    component: MyVerify,
+                    props:true
                 }
             ]
         },
@@ -40,7 +41,7 @@ export default new VueRouter({
         {
             name: 'r-register',
             path: '/pageRegistration',
-            component: PageRegistration
+            component: PageRegistration,
         }
     ]
 });

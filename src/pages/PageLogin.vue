@@ -1,53 +1,34 @@
 <template>
   <div class="login-body">
-    <el-form :model="ruleForm"
-             status-icon :rules="rules"
-             ref="ruleForm"
-             label-width="100px"
-             class="login-form">
+    <el-form :model="ruleForm" status-icon ref="ruleForm" label-width="80px" class="login-form">
       <!--标题-->
       <h2 class="login-title">系统登录</h2>
 
       <!--手机栏-->
-      <el-form-item class="item-text" prop="phone" label-width="13px">
-        <el-input type="text"
-                  v-model="ruleForm.phone"
-                  autocomplete="off"
-                  placeholder="请输入手机号"
-                  prefix-icon="el-icon-user">
+      <el-form-item class="item-text" label-width="13px">
+        <el-input type="text" placeholder="请输入手机号" v-model="ruleForm.phone" autocomplete="off">
+          <template slot="prepend">+86</template>
         </el-input>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
-      <!--      <el-form-item prop="pass" label-width="13px">-->
-      <!--        <el-input type="password"-->
-      <!--                  v-model="ruleForm.pass"-->
-      <!--                  autocomplete="off"-->
-      <!--                  placeholder="请输入密码"-->
-      <!--                  :prefix-icon="loginState">-->
-      <!--        </el-input>-->
-      <!--      </el-form-item>-->
-      <el-form-item prop="pass" label-width="13px">
+      <el-form-item label-width="13px">
         <router-view></router-view>
       </el-form-item>
 
-
+      <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">免密登录</el-link>&nbsp;
+      <br>
       <!--登录按钮-->
-      <el-form-item class="login-submit" label-width="13px" id="login-submit" style="width:100%;margin-bottom:15px;">
-        <el-button :type="loginBtnState" @click="loginHandle" size="100px">登录</el-button>
-        <!--        <el-button @click="resetForm('ruleForm')">重置</el-button>-->
-        <!--        <button id="login-submit" >登录</button>-->
-      </el-form-item>
+      <el-button :type="loginBtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
 
       <el-form-item label-width="13px">
         <el-checkbox v-model="ruleForm.check" id="check">
           我已阅读并同意
-          <el-link :underline="false" type="primary">《健康隐私协议》</el-link>
+          <el-button :underline="false" type="text">《健康隐私协议》</el-button>
         </el-checkbox>
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">免密登录</el-link>&nbsp;
         <el-link :underline="false" type="info">忘记密码</el-link>&nbsp;
         <el-link :underline="false" type="info" @click="toRegisterPage">快速注册</el-link>&nbsp;
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
@@ -60,51 +41,31 @@
 
 <script>
 import {anyNull} from "@/util/StringUtil";
-import {Message} from 'element-ui';
+import {success} from "@/util/prompt";
+import {background} from "@/util/background";
 
 export default {
   name: "PageLogin",
   data() {
-    const validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        callback();
-      }
-    };
-    const checkPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('手机号不能为空'));
-      }
-    };
     return {
+
       loginState: 'el-icon-lock', // 登录状态
       loginBtnState: 'info',
       ruleForm: {
         pass: '',
         check: '',
         phone: '',
-      },
-      rules: {
-        pass: [
-          {validator: validatePass, trigger: 'blur'}
-        ],
-        phone: [
-          {validator: checkPhone, trigger: 'blur'}
-        ]
       }
     };
   },
+  mixins: [success, background],
   methods: {
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
     // 登录
     loginHandle() {
       if (anyNull(this.ruleForm)) {
         return alert("请填写完整");
       } else {
-        // 修改登录状态为登录中
+        // 修改登录图标 为登录中
         this.loginState = 'el-icon-loading';
         console.log("PageLogin组件 ruleForm.phone为：", this.ruleForm.phone);
         console.log("PageLogin组件 ruleForm.pass为：", this.ruleForm.pass);
@@ -118,23 +79,25 @@ export default {
           }
         }).then(function (data) {
           console.log("后端返回的数据是", data);
-          Message({
-            message: data.message,
-            type: 'success'
-          });
+          success.methods.successPrompt('登录成功');
         }).catch(function (data) {
           console.log("异常信息为:", data);
         });
       }
     },
-    // 注册
+    // 跳转到注册页面
     toRegisterPage() {
-
+      this.$router.push({
+        name: 'r-register'
+      });
     },
     // 免密登录
     verifyLoginHandle() {
       this.$router.replace({
-        name: 'r-verify'
+        name: 'r-verify',
+        params: {
+          phone: this.ruleForm.phone
+        }
       });
     },
     // 从MyPassword组件中获取用户输入的密码
@@ -144,10 +107,6 @@ export default {
   },
   // 挂载函数
   mounted() {
-    console.log("开始挂载");
-    // 挂载该组件后设置背景图片为background.jpg
-    document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-1.jpg") + ");background-size: cover;" +
-        "background-repeat: no-repeat");
     // 绑定返回密码事件
     this.$bus.$on('returnPassWord', this.getPassword);
     // 初始化路由代理组件为MyPassword组件
@@ -157,12 +116,11 @@ export default {
         state: this.loginState
       }
     });
-
   },
   // 销毁函数
   beforeDestroy() {
-    // 在销毁该组件前撤销背景图片
-    document.querySelector('body').removeAttribute('style');
+    // 解除事件绑定
+    this.$bus.$off('returnPassWord');
     console.log("已销毁");
   }
 }
@@ -176,7 +134,7 @@ export default {
   background-clip: padding-box;
   margin: 180px auto;
   width: 300px;
-  height: 360px;
+  height: 370px;
   padding: 35px 35px 15px 35px;
   border: 1px solid #eaeaec;
   box-shadow: 0 0 20px #2e3644;
@@ -193,7 +151,6 @@ export default {
 
 /*提交按钮样式*/
 .login-submit {
-  /*size: 100px;*/
   margin: 10px auto 20px;
   /*设置圆角边框*/
   border-radius: 7px;
@@ -206,10 +163,13 @@ export default {
 
 #withoutPass {
   margin-top: 0px;
-  margin-bottom: 2px;
+  margin-bottom: 10px;
+  margin-left: 13px;
 }
 
 #login-submit {
-  height: 30px;
+  margin-top: 3px;
+  margin-left: 13px;
+  width: 286px;
 }
 </style>

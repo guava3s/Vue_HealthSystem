@@ -8,8 +8,11 @@
 </template>
 
 <script>
+import {background} from "@/util/background";
+
 export default {
-  name: "PageRegistration"
+  name: "PageRegistration",
+  mixins:[background]
 }
 </script>
 
