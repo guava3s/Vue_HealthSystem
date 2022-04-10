@@ -10,8 +10,13 @@ import MyVerify from "@/components/MyVerify";
 //创建并暴露一个路由器
 export default new VueRouter({
     routes: [
+        // 初始页面
         {
-            // 登录
+            path: '/',
+            redirect: '/pageLogin'
+        },
+        // 登录
+        {
             name: 'r-login',
             path: '/pageLogin',
             component: PageLogin,
@@ -19,17 +24,19 @@ export default new VueRouter({
                 {
                     // 切换密码登录
                     name: 'r-password',
-                    path: 'myPassword',
-                    component: MyPassword
+                    path: 'myPassword/:state',
+                    component: MyPassword,
+                    props: true
                 },
                 {
                     // 切换短信验证登录
-                    name:'r-verify',
-                    path:'myVerify',
-                    component:MyVerify
+                    name: 'r-verify',
+                    path: 'myVerify',
+                    component: MyVerify
                 }
             ]
         },
+        // 注册页面
         {
             name: 'r-register',
             path: '/pageRegistration',

@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <button>Verify组件</button>
   </div>
 </template>
 

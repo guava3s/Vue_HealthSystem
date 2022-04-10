@@ -7,6 +7,7 @@
              class="login-form">
       <!--标题-->
       <h2 class="login-title">系统登录</h2>
+
       <!--手机栏-->
       <el-form-item class="item-text" prop="phone" label-width="13px">
         <el-input type="text"
@@ -18,33 +19,38 @@
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
+      <!--      <el-form-item prop="pass" label-width="13px">-->
+      <!--        <el-input type="password"-->
+      <!--                  v-model="ruleForm.pass"-->
+      <!--                  autocomplete="off"-->
+      <!--                  placeholder="请输入密码"-->
+      <!--                  :prefix-icon="loginState">-->
+      <!--        </el-input>-->
+      <!--      </el-form-item>-->
       <el-form-item prop="pass" label-width="13px">
-        <el-input type="password"
-                  v-model="ruleForm.pass"
-                  autocomplete="off"
-                  placeholder="请输入密码"
-                  :prefix-icon="loginState">
-        </el-input>
+        <router-view></router-view>
       </el-form-item>
 
+
       <!--登录按钮-->
-      <el-form-item class="login-submit" label-width="13px">
+      <el-form-item class="login-submit" label-width="13px" id="login-submit" style="width:100%;margin-bottom:15px;">
         <el-button :type="loginBtnState" @click="loginHandle" size="100px">登录</el-button>
         <!--        <el-button @click="resetForm('ruleForm')">重置</el-button>-->
+        <!--        <button id="login-submit" >登录</button>-->
       </el-form-item>
 
       <el-form-item label-width="13px">
         <el-checkbox v-model="ruleForm.check" id="check">
           我已阅读并同意
-          <el-link :underline="false" type="warning">《健康隐私协议》</el-link>
+          <el-link :underline="false" type="primary">《健康隐私协议》</el-link>
         </el-checkbox>
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" @click="verifyLoginHandle" type="warning" id="withoutPass">免密登录</el-link>&nbsp;
-        <el-link :underline="false" type="warning">忘记密码</el-link>&nbsp;
-        <el-link :underline="false" type="warning" @click="registerHandle">快速注册</el-link>&nbsp;
-        <el-link :underline="false" type="warning">遇到问题</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">免密登录</el-link>&nbsp;
+        <el-link :underline="false" type="info">忘记密码</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="toRegisterPage">快速注册</el-link>&nbsp;
+        <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>
 
@@ -93,12 +99,15 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 登录
     loginHandle() {
       if (anyNull(this.ruleForm)) {
         return alert("请填写完整");
       } else {
         // 修改登录状态为登录中
         this.loginState = 'el-icon-loading';
+        console.log("PageLogin组件 ruleForm.phone为：", this.ruleForm.phone);
+        console.log("PageLogin组件 ruleForm.pass为：", this.ruleForm.pass);
         // 登录请求
         this.$http({
           url: '/user/pass_lg',
@@ -113,30 +122,48 @@ export default {
             message: data.message,
             type: 'success'
           });
+        }).catch(function (data) {
+          console.log("异常信息为:", data);
         });
       }
     },
     // 注册
-    registerHandle() {
+    toRegisterPage() {
 
     },
     // 免密登录
     verifyLoginHandle() {
-      // this.$router.replace({
-      //   name: 'r-password'
-      // });
+      this.$router.replace({
+        name: 'r-verify'
+      });
+    },
+    // 从MyPassword组件中获取用户输入的密码
+    getPassword(pd) {
+      this.ruleForm.pass = pd;
     }
   },
   // 挂载函数
   mounted() {
+    console.log("开始挂载");
     // 挂载该组件后设置背景图片为background.jpg
-    document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background.jpg") + ");background-size: cover;" +
-        "background-repeat: no-repeat")
+    document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-1.jpg") + ");background-size: cover;" +
+        "background-repeat: no-repeat");
+    // 绑定返回密码事件
+    this.$bus.$on('returnPassWord', this.getPassword);
+    // 初始化路由代理组件为MyPassword组件
+    this.$router.replace({
+      name: 'r-password',
+      params: {
+        state: this.loginState
+      }
+    });
+
   },
   // 销毁函数
   beforeDestroy() {
     // 在销毁该组件前撤销背景图片
-    document.querySelector('body').removeAttribute('style')
+    document.querySelector('body').removeAttribute('style');
+    console.log("已销毁");
   }
 }
 
@@ -166,18 +193,23 @@ export default {
 
 /*提交按钮样式*/
 .login-submit {
-  /*width: 100px;*/
-  size: 100px;
+  /*size: 100px;*/
   margin: 10px auto 20px;
+  /*设置圆角边框*/
+  border-radius: 7px;
 }
 
 /*复选框字体颜色*/
 #check {
-  color: orange;
+  color: darkgrey;
 }
 
 #withoutPass {
   margin-top: 0px;
   margin-bottom: 2px;
+}
+
+#login-submit {
+  height: 30px;
 }
 </style>

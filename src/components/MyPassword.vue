@@ -1,17 +1,27 @@
 <template>
-  <el-form-item prop="pass" label-width="15px">
-    <el-input type="password"
-              v-model="ruleForm.pass"
-              autocomplete="off"
-              placeholder="请输入密码"
-              prefix-icon="el-icon-lock">
-    </el-input>
-  </el-form-item>
+  <el-input type="password"
+            v-model="password"
+            autocomplete="off"
+            placeholder="请输入密码"
+            :prefix-icon="state">
+  </el-input>
 </template>
 
 <script>
 export default {
-  name: "MyPassword"
+  name: "MyPassword",
+  data() {
+    return {
+      password: ''
+    }
+  },
+  props: ['state'],
+  watch: {
+    // 监视password属性，将其发送给PageLogin组件
+    password(newValue) {
+      this.$bus.$emit('returnPassWord', newValue);
+    }
+  }
 }
 </script>
 
