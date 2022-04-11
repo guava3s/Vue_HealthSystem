@@ -1,22 +1,24 @@
 import {Message} from "element-ui";
 
+function baseMassage(data,type){
+    Message({
+        message: data,
+        type: type,
+        center: true,
+        duration: 1300
+    });
+}
+
 const prompts = {
     methods: {
         successPrompt(data) {
-            Message({
-                message: data,
-                type: 'success',
-                center: true,
-                duration: 1500
-            });
+            baseMassage(data,'success');
         },
-        errorPrompt(data){
-            Message({
-                message: data,
-                type: 'error',
-                center: true,
-                duration: 1500
-            });
+        errorPrompt(data) {
+           baseMassage(data,'error');
+        },
+        warningPrompt(data) {
+            baseMassage(data,'warning');
         }
     }
 }

@@ -1,10 +1,10 @@
-// 设置登录与注册背景图片挂载以及销毁
+// 设置登录与注册相关属性与函数以及背景图片挂载以及销毁
 import {anyExcept} from "@/util/StringUtil";
 
 const mixin_LoginAndRegister = {
     data() {
         return {
-            BtnState:'info',
+            BtnState: 'info',
             verifyCode: '',
             ruleForm: {
                 phone: '',
@@ -42,11 +42,17 @@ const mixin_LoginAndRegister = {
                     this.BtnState = 'info';
                 }
             }
+        },
+        'ruleForm.phone': {
+            // 更新MyVerify组件的Phone值
+            handler(newValue) {
+                this.$bus.$emit('updatePhoneNumber', newValue);
+            }
         }
     },
     mounted() {
         // 挂载该组件后设置背景图片为background.jpg
-        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-4.jpg") + "); background-size: cover;" +
+        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-1.jpg") + "); background-size: cover;" +
             "background-repeat: no-repeat");
         // 绑定返回手机号事件
         this.$bus.$on('returnPhoneNumber', this.getPhoneNumber);

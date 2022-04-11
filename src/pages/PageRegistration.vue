@@ -6,12 +6,12 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <PhoneInput/>
+        <MyPhoneInput/>
       </el-form-item>
 
-      <!--密码栏 / 验证码栏-->
+      <!--验证码栏-->
       <el-form-item label-width="13px">
-        <MyVerify/>
+        <MyVerify :phone="ruleForm.phone"/>
       </el-form-item>
 
       <!--注册按钮-->
@@ -33,15 +33,17 @@
 
 <script>
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import PhoneInput from "@/components/PhoneInput";
 import MyVerify from "@/components/MyVerify";
 import MyProtocol from "@/components/MyProtocol";
+import MyPhoneInput from "@/components/MyPhoneInput";
+import {anyExcept} from "@/util/StringUtil";
+import {prompts} from "@/util/mixin_prompt";
 
 export default {
   name: "PageRegistration",
   mixins: [mixin_LoginAndRegister],
   components: {
-    MyVerify, PhoneInput, MyProtocol
+    MyPhoneInput, MyVerify, MyProtocol
   },
   data() {
     return {
@@ -59,6 +61,11 @@ export default {
     },
     // 快速注册
     registerHandle() {
+      if (!anyExcept(this.mark)) {
+        return prompts.methods.warningPrompt("请输入信息并勾选协议");
+      } else {
+        prompts.methods.successPrompt('注册成功');
+      }
 
     }
   }

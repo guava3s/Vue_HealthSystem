@@ -1,12 +1,12 @@
 <template>
-  <el-input type="text" placeholder="请输入手机号" v-model="phoneNumber" autocomplete="off">
+  <el-input type="text" placeholder="请输入11位手机号" v-model="phoneNumber" autocomplete="off">
     <template slot="prepend">+86</template>
   </el-input>
 </template>
 
 <script>
 export default {
-  name: "PhoneInput",
+  name: "MyPhoneInput",
   data() {
     return {
       phoneNumber: ''

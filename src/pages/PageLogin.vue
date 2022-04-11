@@ -37,9 +37,9 @@
 
 import {prompts} from "@/util/mixin_prompt";
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import {allTrue} from "@/util/StringUtil";
-import PhoneInput from "@/components/PhoneInput";
+import PhoneInput from "@/components/MyPhoneInput";
 import MyProtocol from "@/components/MyProtocol";
+import {anyExcept} from "@/util/StringUtil";
 
 export default {
   name: "PageLogin",
@@ -58,8 +58,8 @@ export default {
   methods: {
     // 登录
     loginHandle() {
-      if (!allTrue(this.mark)) {
-        return alert("请填写完整");
+      if (!anyExcept(this.mark)) {
+        return prompts.methods.warningPrompt("请输入信息并勾选协议");
       } else {
         // 修改登录图标 为登录中
         this.loginState = 'el-icon-loading';
@@ -68,8 +68,13 @@ export default {
         if (this.ruleForm.pass !== '') {
           url = '/user/pass_lg';
         }
+        prompts.methods.successPrompt('登录成功');
         console.log("请求路径是:", url);
+        this.$router.push({
+          name: 'r-container'
+        });
         // 登录请求
+        /*
         this.$http({
           url: url,
           method: 'post',
@@ -87,7 +92,7 @@ export default {
         }).catch(function (data) {
           console.log("异常信息为:", data);
           prompts.methods.errorPrompt('登录失败');
-        });
+        });*/
       }
     },
     // 跳转到注册页面

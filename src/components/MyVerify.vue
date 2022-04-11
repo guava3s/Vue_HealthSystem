@@ -23,6 +23,10 @@ export default {
   },
   methods: {
     getCode() {
+      console.log(this.phone);
+      if (this.phoneNumber === '') {
+        return prompts.methods.warningPrompt('手机号不能为空');
+      }
       prompts.methods.successPrompt('发送成功');
       // 60s倒数
       this.state = true;//点击之后设置按钮不可取
@@ -37,14 +41,25 @@ export default {
           this.state = false; //这里重新开启
         }
       }, 1000);
-      console.log("MyVerify组件 phone为：", this.phone);
-      console.log("向后端请求验证码");
+    },
+    // 更新手机号
+    updatePhoneNumber(phone) {
+      this.phoneNumber = phone;
     }
   },
   watch: {
+    // 监听验证码属性
     code(newValue) {
       this.$bus.$emit('returnVerifyCode', newValue);
     }
+  },
+  mounted() {
+    // 绑定事件
+    this.$bus.$on('updatePhoneNumber', this.updatePhoneNumber);
+  },
+  beforeDestroy() {
+    // 解绑事件
+    this.$bus.$off('updatePhoneNumber');
   }
 }
 </script>

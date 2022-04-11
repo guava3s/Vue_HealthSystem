@@ -20,7 +20,7 @@ function allTrue(formData) {
     return temp;
 }
 
-// 传递的JSON对象中任意一个为false
+// 传递的JSON对象中存在任意一个为false,返回false
 function anyExcept(obj) {
     for (let v in obj)
         if (!obj[v])
