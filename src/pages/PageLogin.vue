@@ -6,9 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <el-input type="text" placeholder="请输入手机号" v-model="ruleForm.phone" autocomplete="off">
-          <template slot="prepend">+86</template>
-        </el-input>
+        <PhoneInput/>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
@@ -40,9 +38,11 @@
 </template>
 
 <script>
+
 import {prompts} from "@/util/mixin_prompt";
-import {mixin_background} from "@/util/mixin_background";
-import {allTrue, anyExcept} from "@/util/StringUtil";
+import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
+import {allTrue} from "@/util/StringUtil";
+import PhoneInput from "@/components/PhoneInput";
 
 export default {
   name: "PageLogin",
@@ -53,19 +53,15 @@ export default {
       loginModel: '免密登录',
       loginModelMark: false,
       mark: { // 标记属性
-        markPhone: false, // 标记phone
         markOther: false, // 标记密码与短信验证码
-        markCheck: false  // 标记是否勾选
       },
       ruleForm: {
         pass: '',
-        check: '',
-        phone: '',
       },
-      verifyCode: ''
     };
   },
-  mixins: [mixin_background],
+  mixins: [mixin_LoginAndRegister],
+  components: {PhoneInput},
   methods: {
     // 登录
     loginHandle() {
@@ -133,44 +129,12 @@ export default {
       this.ruleForm.pass = pd;
       this.verifyCode = pd;
       this.mark.markOther = pd !== '';
-    },
-    // 从MyVerify组件获取用户输入的验证码
-    getVerifyCode(vc) {
-      this.verifyCode = vc;
-      this.mark.markOther = vc !== '';
-    },
-  },
-  watch: {
-    // 监视标记属性变化
-    mark: {
-      deep: true,
-      handler() {
-        if (anyExcept(this.mark)) {
-          console.log("改变状态");
-          this.loginBtnState = 'success';
-        } else {
-          this.loginBtnState = 'info';
-        }
-      }
-    },
-    // 监视表单项phone值变化
-    'ruleForm.phone': {
-      handler() {
-        this.mark.markPhone = this.ruleForm.phone !== '';
-      }
-    },
-    'ruleForm.check': {
-      handler() {
-        this.mark.markCheck = this.ruleForm.check
-      }
     }
   },
   // 挂载函数
   mounted() {
     // 绑定返回密码事件
     this.$bus.$on('returnPassWord', this.getPassword);
-    // 绑定返回验证码事件
-    this.$bus.$on('returnVerifyCode', this.getVerifyCode);
     // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
     this.$router.replace({
       name: 'r-password',
@@ -183,7 +147,6 @@ export default {
   beforeDestroy() {
     // 解除事件绑定
     this.$bus.$off('returnPassWord');
-    this.$bus.$off('returnVerifyCode');
   }
 }
 

@@ -1,13 +1,10 @@
 <template>
-  <div>
-    <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="code">
-      <el-button id="login-verify-send" slot="append" @click="getCode" :disabled="state">{{ content }}</el-button>
-    </el-input>
-  </div>
+  <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="code">
+    <el-button id="login-verify-send" slot="append" @click="getCode" :disabled="state">{{ content }}</el-button>
+  </el-input>
 </template>
 
 <script>
-
 
 import {prompts} from "@/util/mixin_prompt";
 
