@@ -15,13 +15,11 @@
       </el-form-item>
 
       <!--注册按钮-->
-      <el-button :type="loginBtnState" @click="registerHandle" size="100px" id="register-submit">快速注册</el-button>
+      <el-button :type="BtnState" @click="registerHandle" size="100px" id="register-submit">快速注册</el-button>
 
+      <!--协议同意-->
       <el-form-item label-width="13px">
-        <el-checkbox v-model="ruleForm.check" id="check">
-          我已阅读并同意
-          <el-button :underline="false" type="text">《健康服务协议》</el-button>
-        </el-checkbox>
+        <MyProtocol/>
       </el-form-item>
 
       <el-form-item label-width="13px">
@@ -37,24 +35,19 @@
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
 import PhoneInput from "@/components/PhoneInput";
 import MyVerify from "@/components/MyVerify";
+import MyProtocol from "@/components/MyProtocol";
 
 export default {
   name: "PageRegistration",
   mixins: [mixin_LoginAndRegister],
   components: {
-    MyVerify,
-    PhoneInput
+    MyVerify, PhoneInput, MyProtocol
   },
-  data(){
+  data() {
     return {
-      loginBtnState: 'info',
-      loginModelMark: false,
-      mark: { // 标记属性
-        markOther: false, // 标记短信验证码
-      },
       ruleForm: {
-        verify:''
-      },
+        verify: ''
+      }
     };
   },
   methods: {
@@ -65,7 +58,7 @@ export default {
       });
     },
     // 快速注册
-    registerHandle(){
+    registerHandle() {
 
     }
   }
@@ -97,10 +90,5 @@ export default {
   margin-top: 3px;
   margin-left: 13px;
   width: 286px;
-}
-
-/*复选框字体颜色*/
-#check {
-  color: darkgrey;
 }
 </style>

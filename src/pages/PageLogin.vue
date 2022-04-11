@@ -17,13 +17,11 @@
       <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">{{ loginModel }}</el-link>&nbsp;
       <br>
       <!--登录按钮-->
-      <el-button :type="loginBtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
+      <el-button :type="BtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
 
+      <!--协议同意-->
       <el-form-item label-width="13px">
-        <el-checkbox v-model="ruleForm.check" id="check">
-          我已阅读并同意
-          <el-button :underline="false" type="text">《健康隐私协议》</el-button>
-        </el-checkbox>
+        <MyProtocol/>
       </el-form-item>
 
       <el-form-item label-width="13px">
@@ -32,9 +30,7 @@
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>
-
   </div>
-
 </template>
 
 <script>
@@ -43,25 +39,22 @@ import {prompts} from "@/util/mixin_prompt";
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
 import {allTrue} from "@/util/StringUtil";
 import PhoneInput from "@/components/PhoneInput";
+import MyProtocol from "@/components/MyProtocol";
 
 export default {
   name: "PageLogin",
   data() {
     return {
       loginState: 'el-icon-lock', // 登录状态
-      loginBtnState: 'info',
       loginModel: '免密登录',
       loginModelMark: false,
-      mark: { // 标记属性
-        markOther: false, // 标记密码与短信验证码
-      },
       ruleForm: {
         pass: '',
       },
     };
   },
   mixins: [mixin_LoginAndRegister],
-  components: {PhoneInput},
+  components: {PhoneInput,MyProtocol},
   methods: {
     // 登录
     loginHandle() {
@@ -149,7 +142,6 @@ export default {
     this.$bus.$off('returnPassWord');
   }
 }
-
 </script>
 
 <style scoped>
@@ -172,11 +164,6 @@ export default {
   margin: 0px auto 40px auto;
   text-align: center;
   color: #1fb5ac;
-}
-
-/*复选框字体颜色*/
-#check {
-  color: darkgrey;
 }
 
 #withoutPass {

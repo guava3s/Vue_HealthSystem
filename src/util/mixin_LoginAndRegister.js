@@ -4,14 +4,15 @@ import {anyExcept} from "@/util/StringUtil";
 const mixin_LoginAndRegister = {
     data() {
         return {
+            BtnState:'info',
             verifyCode: '',
             ruleForm: {
                 phone: '',
-                check: ''
             },
             mark: {
-                markPhone: false, // 标记phone
-                markCheck: false  // 标记是否勾选
+                markPhone: false, // 标记phone是否填入
+                markOther: false, // 标记密码与短信验证码
+                markCheck: false  // 标记协议是否勾选
             }
         }
     },
@@ -25,6 +26,10 @@ const mixin_LoginAndRegister = {
         getVerifyCode(vc) {
             this.verifyCode = vc;
             this.mark.markOther = vc !== '';
+        },
+        // 从MyProtocol组件获取协议勾选状态
+        getCheckState(cs) {
+            this.mark.markCheck = cs;
         }
     },
     watch: {
@@ -32,16 +37,10 @@ const mixin_LoginAndRegister = {
             deep: true,
             handler() {
                 if (anyExcept(this.mark)) {
-                    console.log("改变状态");
-                    this.loginBtnState = 'success';
+                    this.BtnState = 'success';
                 } else {
-                    this.loginBtnState = 'info';
+                    this.BtnState = 'info';
                 }
-            }
-        },
-        'ruleForm.check': {
-            handler() {
-                this.mark.markCheck = this.ruleForm.check
             }
         }
     },
@@ -53,6 +52,8 @@ const mixin_LoginAndRegister = {
         this.$bus.$on('returnPhoneNumber', this.getPhoneNumber);
         // 绑定返回验证码事件
         this.$bus.$on('returnVerifyCode', this.getVerifyCode);
+        // 绑定返回勾选事件
+        this.$bus.$on('returnCheckState', this.getCheckState);
     },
     beforeDestroy() {
         // 在销毁该组件前撤销背景图片
@@ -60,6 +61,7 @@ const mixin_LoginAndRegister = {
         // 解除事件绑定
         this.$bus.$off('returnVerifyCode');
         this.$bus.$off('returnPhoneNumber');
+        this.$bus.$off('returnCheckState');
     }
 }
 export {mixin_LoginAndRegister}
