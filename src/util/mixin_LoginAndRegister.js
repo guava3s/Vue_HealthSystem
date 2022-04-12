@@ -46,6 +46,8 @@ const mixin_LoginAndRegister = {
         'ruleForm.phone': {
             // 更新MyVerify组件的Phone值
             handler(newValue) {
+                // 由于存在路由转发，无法具体给到标签设置ref属性，则只能使用全局事件总线通信
+                // this.$refs.myVerify.phoneNumber = newValue;
                 this.$bus.$emit('updatePhoneNumber', newValue);
             }
         }

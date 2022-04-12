@@ -27,7 +27,16 @@ export default {
       if (this.phoneNumber === '') {
         return prompts.methods.warningPrompt('手机号不能为空');
       }
-      prompts.methods.successPrompt('发送成功');
+      this.$http({
+        url: '/user/code',
+        method: 'get',
+        params: {
+          phoneNumber: this.phoneNumber
+        }
+      }).then(function (data) {
+        console.log(data);
+        prompts.methods.successPrompt('发送成功');
+      });
       // 60s倒数
       this.state = true;//点击之后设置按钮不可取
       this.content = this.totalTime + "s";//按钮内文本

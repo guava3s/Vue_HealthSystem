@@ -11,7 +11,7 @@
 
       <!--验证码栏-->
       <el-form-item label-width="13px">
-        <MyVerify :phone="ruleForm.phone"/>
+        <MyVerify ref="myVerify" :phone="ruleForm.phone"/>
       </el-form-item>
 
       <!--注册按钮-->
