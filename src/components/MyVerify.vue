@@ -28,7 +28,7 @@ export default {
         return prompts.methods.warningPrompt('手机号不能为空');
       }
       this.$http({
-        url: '/user/code',
+        url: '/user/verify/code',
         method: 'get',
         params: {
           phoneNumber: this.phoneNumber
@@ -54,6 +54,10 @@ export default {
     // 更新手机号
     updatePhoneNumber(phone) {
       this.phoneNumber = phone;
+    },
+    // 更新发送键状态
+    updateState(state) {
+      this.state = state;
     }
   },
   watch: {
@@ -65,10 +69,12 @@ export default {
   mounted() {
     // 绑定事件
     this.$bus.$on('updatePhoneNumber', this.updatePhoneNumber);
+    this.$bus.$on('updateState', this.updateState);
   },
   beforeDestroy() {
     // 解绑事件
     this.$bus.$off('updatePhoneNumber');
+    this.$bus.$off('updateState');
   }
 }
 </script>
