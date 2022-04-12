@@ -54,7 +54,7 @@ export default {
     };
   },
   mixins: [mixin_LoginAndRegister],
-  components: {PhoneInput,MyProtocol},
+  components: {PhoneInput, MyProtocol},
   methods: {
     // 登录
     loginHandle() {
@@ -70,11 +70,8 @@ export default {
         }
         prompts.methods.successPrompt('登录成功');
         console.log("请求路径是:", url);
-        this.$router.push({
-          name: 'r-container'
-        });
         // 登录请求
-        /*
+        let _this = this;
         this.$http({
           url: url,
           method: 'post',
@@ -86,13 +83,14 @@ export default {
           console.log("后端返回的数据是", data);
           // 需要先获取到成功数据才能提示成功
           prompts.methods.successPrompt('登录成功');
-          this.$router.push({
+          // 在这里要注意this不是VC实例对象，需要从外部赋值
+          _this.$router.push({
             name: 'r-container'
           });
         }).catch(function (data) {
           console.log("异常信息为:", data);
           prompts.methods.errorPrompt('登录失败');
-        });*/
+        });
       }
     },
     // 跳转到注册页面
