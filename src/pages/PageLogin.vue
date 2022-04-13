@@ -94,7 +94,7 @@ export default {
       }).then(function (data) {
         console.log("后端返回的数据是", data);
         if (data.data.message === '登录成功') {
-          prompts.methods.successPrompt(data.data.content);
+          prompts.methods.successPrompt(data.data.message);
           // 需要先获取到成功数据才能提示成功
           // 在这里要注意this不是VC实例对象，需要从外部赋值
           _this.$router.push({

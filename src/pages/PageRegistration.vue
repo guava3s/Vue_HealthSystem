@@ -65,7 +65,7 @@ export default {
       if (!anyExcept(this.mark)) {
         return prompts.methods.warningPrompt("请输入信息并勾选协议");
       }
-      this.$http({
+      _this.$http({
         url: '/user/phone_rg',
         method: 'post',
         params: {
