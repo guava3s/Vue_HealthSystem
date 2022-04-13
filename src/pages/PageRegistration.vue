@@ -81,6 +81,8 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt("验证码错误");
+          _this.ruleForm.phone = '';
+          _this.verifyCode = '';
         }
       });
     }

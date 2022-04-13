@@ -99,6 +99,8 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt(data.data.message);
+          _this.ruleForm.phone = '';
+          _this.verifyCode = '';
         }
       }).catch(function (data) {
         console.log("异常信息为:", data);

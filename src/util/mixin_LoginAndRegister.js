@@ -54,7 +54,7 @@ const mixin_LoginAndRegister = {
     },
     mounted() {
         // 挂载该组件后设置背景图片为background.jpg
-        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-1.jpg") + "); background-size: cover;" +
+        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-5.jpg") + "); background-size: cover;" +
             "background-repeat: no-repeat");
         // 绑定返回手机号事件
         this.$bus.$on('returnPhoneNumber', this.getPhoneNumber);
