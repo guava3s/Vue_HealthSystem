@@ -6,7 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput/>
+        <MyPhoneInput father="PageRegistration"/>
       </el-form-item>
 
       <!--验证码栏-->
@@ -72,11 +72,16 @@ export default {
           phoneNumber: this.ruleForm.phone,
           verifyCode: this.verifyCode
         }
-      }).then(function () {
-        _this.$router.push({
-          name: 'r-login'
-        });
-        prompts.methods.successPrompt('注册成功,返回登录页面');
+      }).then(function (data) {
+        console.log("后端返回的数据是", data);
+        if (data.data.state) {
+          prompts.methods.successPrompt('注册成功,正在跳转至登录页面');
+          _this.$router.push({
+            name: 'r-login'
+          });
+        } else {
+          prompts.methods.errorPrompt("验证码错误");
+        }
       });
     }
   }

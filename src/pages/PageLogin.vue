@@ -6,7 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <PhoneInput/>
+        <MyPhoneInput/>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
@@ -37,9 +37,9 @@
 
 import {prompts} from "@/util/mixin_prompt";
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import PhoneInput from "@/components/MyPhoneInput";
 import MyProtocol from "@/components/MyProtocol";
 import {anyExcept} from "@/util/StringUtil";
+import MyPhoneInput from "@/components/MyPhoneInput";
 
 export default {
   name: "PageLogin",
@@ -54,18 +54,16 @@ export default {
     };
   },
   mixins: [mixin_LoginAndRegister],
-  components: {PhoneInput, MyProtocol},
+  components: {MyPhoneInput, MyProtocol},
   methods: {
     // 登录
     loginHandle() {
       if (!anyExcept(this.mark)) {
         return prompts.methods.warningPrompt("请输入信息并勾选协议");
       }
-      // 修改登录图标 为登录中
-      this.loginState = 'el-icon-loading';
       // 裁决登录方式
       let url = '/user/phone_lg';
-      if (this.ruleForm.pass !== '') {
+      if (this.ruleForm.pass != '') {
         url = '/user/pass_lg';
       }
       console.log("请求路径是:", url);
@@ -88,20 +86,19 @@ export default {
         url: url,
         method: 'post',
         params: {
-          phoneNumber: this.ruleForm.phone,
-          verifyCode: this.verifyCode
+          phoneNumber: _this.ruleForm.phone,
+          verifyCode: _this.verifyCode
         }
       }).then(function (data) {
         console.log("后端返回的数据是", data);
-        if (data.data.message === '登录成功') {
-          prompts.methods.successPrompt(data.data.message);
-          // 需要先获取到成功数据才能提示成功
+        if (data.data.state) {
+          prompts.methods.successPrompt("登录成功");
           // 在这里要注意this不是VC实例对象，需要从外部赋值
           _this.$router.push({
             name: 'r-container'
           });
         } else {
-          prompts.methods.errorPrompt("用户名或密码错误");
+          prompts.methods.errorPrompt(data.data.message);
         }
       }).catch(function (data) {
         console.log("异常信息为:", data);
@@ -117,6 +114,7 @@ export default {
     verifyLoginHandle() {
       this.loginModelMark = !this.loginModelMark;
       if (this.loginModelMark) {
+        this.ruleForm.pass = '';
         this.loginModel = '密码登录';
         this.$router.replace({
           name: 'r-verify',
@@ -125,6 +123,7 @@ export default {
           }
         });
       } else {
+        this.verifyCode = '';
         this.loginModel = '免密登录';
         this.$router.replace({
           name: 'r-password',

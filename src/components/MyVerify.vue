@@ -35,7 +35,11 @@ export default {
         }
       }).then(function (data) {
         console.log(data);
-        prompts.methods.successPrompt('发送成功');
+        if (data.data.state) {
+          prompts.methods.successPrompt('发送成功');
+        }else{
+          prompts.methods.warningPrompt(data.data.message);
+        }
       });
       // 60s倒数
       this.state = true;//点击之后设置按钮不可取

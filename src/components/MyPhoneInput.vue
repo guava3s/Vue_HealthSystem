@@ -10,6 +10,7 @@ import {elevenNumber} from "@/util/StringUtil";
 
 export default {
   name: "MyPhoneInput",
+  props: ['father'],
   data() {
     return {
       phoneNumber: ''
@@ -28,18 +29,22 @@ export default {
         return prompts.methods.errorPrompt("请输入正确账号");
       }
       let _this = this;
-      this.$http({
-        url: '/user/verify/check',
-        method: 'post',
-        params: {
-          phoneNumber: this.phoneNumber
-        }
-      }).then(function (data) {
-        let num = data.data + '';
-        if (num !== _this.phoneNumber) {
-          prompts.methods.warningPrompt("该账号不存在或者失效");
-        }
-      });
+      if (this.father === 'PageRegistration') {
+        _this.$http({
+          url: '/user/verify/check',
+          method: 'post',
+          params: {
+            phoneNumber: this.phoneNumber
+          }
+        }).then(function (data) {
+          console.log("返回的数据为:", data);
+          if (data.data.state) {
+            prompts.methods.successPrompt("该账号可以使用");
+          } else {
+            prompts.methods.warningPrompt("该账号已存在");
+          }
+        });
+      }
     }
   }
 }
