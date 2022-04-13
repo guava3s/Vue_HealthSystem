@@ -61,12 +61,23 @@ export default {
     },
     // 快速注册
     registerHandle() {
+      let _this = this;
       if (!anyExcept(this.mark)) {
         return prompts.methods.warningPrompt("请输入信息并勾选协议");
-      } else {
-        prompts.methods.successPrompt('注册成功');
       }
-
+      this.$http({
+        url: '/user/phone_rg',
+        method: 'post',
+        params: {
+          phoneNumber: this.ruleForm.phone,
+          verifyCode: this.verifyCode
+        }
+      }).then(function () {
+        _this.$router.push({
+          name: 'r-login'
+        });
+        prompts.methods.successPrompt('注册成功,返回登录页面');
+      });
     }
   }
 }

@@ -35,12 +35,9 @@ export default {
           phoneNumber: this.phoneNumber
         }
       }).then(function (data) {
-        console.log(data);
-        if (data.data.content !== _this.phoneNumber) {
-          _this.$bus.$emit('updateState', false);
+        let num = data.data + '';
+        if (num !== _this.phoneNumber) {
           prompts.methods.warningPrompt("该账号不存在或者失效");
-        } else {
-          _this.$bus.$emit('updateState', true);
         }
       });
     }
