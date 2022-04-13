@@ -14,6 +14,7 @@ Vue.prototype.$http = axios.create({
     // timeout: 1000,
     headers: {
         'Content-Type': 'application/json'
+
     }
 });
 

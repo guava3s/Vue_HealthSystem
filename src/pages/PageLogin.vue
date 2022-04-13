@@ -67,30 +67,43 @@ export default {
         let url = '/user/phone_lg';
         if (this.ruleForm.pass !== '') {
           url = '/user/pass_lg';
+          // url = '/user/login';
         }
-        prompts.methods.successPrompt('登录成功');
         console.log("请求路径是:", url);
-        // 登录请求
+        // 登录请求简写形式
         let _this = this;
-        this.$http({
-          url: url,
-          method: 'post',
-          params: {
-            phoneNumber: this.ruleForm.phone,
-            verifyCode: this.verifyCode
-          }
-        }).then(function (data) {
-          console.log("后端返回的数据是", data);
-          // 需要先获取到成功数据才能提示成功
-          prompts.methods.successPrompt('登录成功');
-          // 在这里要注意this不是VC实例对象，需要从外部赋值
+        this.$http.post(url, {
+          phoneNumber: _this.ruleForm.phone,
+          verifyCode: _this.verifyCode
+        }).then(function (response) {
+          console.log("后端返回的数据是", response);
+          prompts.methods.successPrompt(response.data.content);
           _this.$router.push({
             name: 'r-container'
           });
-        }).catch(function (data) {
-          console.log("异常信息为:", data);
+        }).catch(function (error) {
+          console.log("异常信息为:", error);
           prompts.methods.errorPrompt('登录失败');
         });
+        // this.$http({
+        //   url: url,
+        //   method: 'post',
+        //   params: {
+        //     phoneNumber: this.ruleForm.phone,
+        //     verifyCode: this.verifyCode
+        //   }
+        // }).then(function (data) {
+        //   console.log("后端返回的数据是", data);
+        //   // 需要先获取到成功数据才能提示成功
+        //   prompts.methods.successPrompt(data.data.content);
+        //   // 在这里要注意this不是VC实例对象，需要从外部赋值
+        //   _this.$router.push({
+        //     name: 'r-container'
+        //   });
+        // }).catch(function (data) {
+        //   console.log("异常信息为:", data);
+        //   prompts.methods.errorPrompt('登录失败');
+        // });
       }
     },
     // 跳转到注册页面

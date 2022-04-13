@@ -28,6 +28,12 @@ function anyExcept(obj) {
     return true;
 }
 
+// js正则表达式校验账号长度，以及是否为纯数字
+function elevenNumber(num) {
+    let pattern = /^\d{11}$/;
+    return pattern.test(num);
+}
+
 
 // 暴露
-export {isNull, anyNull, allTrue, anyExcept};
+export {isNull, anyNull, allTrue, anyExcept, elevenNumber};

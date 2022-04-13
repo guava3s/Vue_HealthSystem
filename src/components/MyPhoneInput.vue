@@ -1,17 +1,17 @@
 <template>
-  <el-input type="text" :placeholder="inp" v-model="phoneNumber" autocomplete="off" @change="checkNumber">
+  <el-input type="text" placeholder="请输入11位手机号" v-model="phoneNumber" autocomplete="off" @change="checkNumber">
     <template slot="prepend">+86</template>
   </el-input>
 </template>
 
 <script>
 import {prompts} from "@/util/mixin_prompt";
+import {elevenNumber} from "@/util/StringUtil";
 
 export default {
   name: "MyPhoneInput",
   data() {
     return {
-      inp: '请输入11位手机号',
       phoneNumber: ''
     }
   },
@@ -22,8 +22,11 @@ export default {
     }
   },
   methods: {
-    // 检查手机号是否存在
+    // 检查手机号是否可用以及存在
     checkNumber() {
+      if (!elevenNumber(this.phoneNumber)) {
+        return prompts.methods.errorPrompt("请输入正确账号");
+      }
       let _this = this;
       this.$http({
         url: '/user/verify/check',
@@ -35,7 +38,6 @@ export default {
         console.log(data);
         if (data.data.content !== _this.phoneNumber) {
           _this.$bus.$emit('updateState', false);
-          _this.inp = '';
           prompts.methods.warningPrompt("该账号不存在或者失效");
         } else {
           _this.$bus.$emit('updateState', true);
