@@ -6,9 +6,6 @@ const mixin_LoginAndRegister = {
         return {
             BtnState: 'info',
             verifyCode: '',
-            ruleForm: {
-                phone: '',
-            },
             mark: {
                 markPhone: false, // 标记phone是否填入
                 markOther: false, // 标记密码与短信验证码
@@ -42,22 +39,12 @@ const mixin_LoginAndRegister = {
                     this.BtnState = 'info';
                 }
             }
-        },
-        'ruleForm.phone': {
-            // 更新MyVerify组件的Phone值
-            handler(newValue) {
-                // 由于存在路由转发，无法具体给到标签设置ref属性，则只能使用全局事件总线通信
-                // this.$refs.myVerify.phoneNumber = newValue;
-                this.$bus.$emit('updatePhoneNumber', newValue);
-            }
         }
     },
     mounted() {
         // 挂载该组件后设置背景图片为background.jpg
-        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-5.jpg") + "); background-size: cover;" +
+        document.querySelector('body').setAttribute('style', "background-image: url(" + require("../../static/background-1.jpg") + "); background-size: cover;" +
             "background-repeat: no-repeat");
-        // 绑定返回手机号事件
-        this.$bus.$on('returnPhoneNumber', this.getPhoneNumber);
         // 绑定返回验证码事件
         this.$bus.$on('returnVerifyCode', this.getVerifyCode);
         // 绑定返回勾选事件
@@ -68,7 +55,6 @@ const mixin_LoginAndRegister = {
         document.querySelector('body').removeAttribute('style');
         // 解除事件绑定
         this.$bus.$off('returnVerifyCode');
-        this.$bus.$off('returnPhoneNumber');
         this.$bus.$off('returnCheckState');
     }
 }

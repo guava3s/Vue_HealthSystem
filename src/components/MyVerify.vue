@@ -7,6 +7,7 @@
 <script>
 
 import {prompts} from "@/util/mixin_prompt";
+import {mapState} from "vuex";
 
 export default {
   name: "MyVerify",
@@ -16,28 +17,30 @@ export default {
     return {
       content: '获取验证码',
       code: '',
-      phoneNumber: this.phone,
       state: false,
       totalTime: 60
     }
   },
+  computed: {
+    ...mapState('user', ['Phone'])
+  },
   methods: {
     getCode() {
-      console.log(this.phone);
-      if (this.phoneNumber === '') {
+      console.log();
+      if (this.Phone === '') {
         return prompts.methods.warningPrompt('手机号不能为空');
       }
       this.$http({
         url: '/user/verify/code',
         method: 'get',
         params: {
-          phoneNumber: this.phoneNumber
+          phoneNumber: this.Phone
         }
       }).then(function (data) {
         console.log(data);
         if (data.data.state) {
           prompts.methods.successPrompt('发送成功');
-        }else{
+        } else {
           prompts.methods.warningPrompt(data.data.message);
         }
       });

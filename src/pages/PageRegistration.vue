@@ -6,7 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput father="PageRegistration"/>
+        <MyPhoneInput :requiredSwitch="true"/>
       </el-form-item>
 
       <!--验证码栏-->
@@ -38,6 +38,7 @@ import MyProtocol from "@/components/MyProtocol";
 import MyPhoneInput from "@/components/MyPhoneInput";
 import {anyExcept} from "@/util/StringUtil";
 import {prompts} from "@/util/mixin_prompt";
+import {mapState,mapMutations} from "vuex";
 
 export default {
   name: "PageRegistration",
@@ -52,7 +53,11 @@ export default {
       }
     };
   },
+  computed:{
+    ...mapState('user',['Phone']),
+  },
   methods: {
+    ...mapMutations('user',['updatePhone']),
     // 跳转至登录页面
     toLoginPage() {
       this.$router.push({
@@ -69,7 +74,7 @@ export default {
         url: '/user/phone_rg',
         method: 'post',
         params: {
-          phoneNumber: this.ruleForm.phone,
+          phoneNumber: this.Phone,
           verifyCode: this.verifyCode
         }
       }).then(function (data) {
@@ -81,7 +86,7 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt("验证码错误");
-          _this.ruleForm.phone = '';
+          _this.updatePhone('');
           _this.verifyCode = '';
         }
       });

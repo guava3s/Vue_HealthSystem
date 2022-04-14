@@ -18,7 +18,6 @@
       <br>
       <!--登录按钮-->
       <el-button :type="BtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
-
       <!--协议同意-->
       <el-form-item label-width="13px">
         <MyProtocol/>
@@ -40,6 +39,7 @@ import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
 import MyProtocol from "@/components/MyProtocol";
 import {anyExcept} from "@/util/StringUtil";
 import MyPhoneInput from "@/components/MyPhoneInput";
+import {mapState,mapMutations} from "vuex";
 
 export default {
   name: "PageLogin",
@@ -55,7 +55,11 @@ export default {
   },
   mixins: [mixin_LoginAndRegister],
   components: {MyPhoneInput, MyProtocol},
+  computed: {
+    ...mapState('user', ['Phone']),
+  },
   methods: {
+    ...mapMutations('user',['updatePhone']),
     // 登录
     loginHandle() {
       if (!anyExcept(this.mark)) {
@@ -69,24 +73,11 @@ export default {
       console.log("请求路径是:", url);
       // 登录请求简写形式
       let _this = this;
-      // this.$http.post(url, {
-      //   phoneNumber: _this.ruleForm.phone,
-      //   verifyCode: _this.verifyCode
-      // }).then(function (response) {
-      //   console.log("后端返回的数据是", response);
-      //   prompts.methods.successPrompt(response.data.content);
-      //   _this.$router.push({
-      //     name: 'r-container'
-      //   });
-      // }).catch(function (error) {
-      //   console.log("异常信息为:", error);
-      //   prompts.methods.errorPrompt('登录失败');
-      // });
       this.$http({
         url: url,
         method: 'post',
         params: {
-          phoneNumber: _this.ruleForm.phone,
+          phoneNumber: _this.Phone,
           verifyCode: _this.verifyCode
         }
       }).then(function (data) {
@@ -99,7 +90,7 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt(data.data.message);
-          _this.ruleForm.phone = '';
+          _this.updatePhone('');
           _this.verifyCode = '';
         }
       }).catch(function (data) {
@@ -119,10 +110,7 @@ export default {
         this.ruleForm.pass = '';
         this.loginModel = '密码登录';
         this.$router.replace({
-          name: 'r-verify',
-          params: {
-            phone: this.ruleForm.phone
-          }
+          name: 'r-verify'
         });
       } else {
         this.verifyCode = '';
