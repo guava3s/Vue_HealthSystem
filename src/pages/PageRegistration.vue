@@ -1,6 +1,6 @@
 <template>
   <div class="register-form">
-    <el-form :model="ruleForm" status-icon ref="ruleForm" label-width="80px" class="login-form">
+    <el-form status-icon ref="ruleForm" label-width="80px" class="login-form">
       <!--标题-->
       <h2 class="register-title">用户注册</h2>
 
@@ -11,7 +11,7 @@
 
       <!--验证码栏-->
       <el-form-item label-width="13px">
-        <MyVerify ref="myVerify" :phone="ruleForm.phone"/>
+        <MyVerify ref="myVerify" :phone="Phone"/>
       </el-form-item>
 
       <!--注册按钮-->
@@ -38,7 +38,7 @@ import MyProtocol from "@/components/MyProtocol";
 import MyPhoneInput from "@/components/MyPhoneInput";
 import {anyExcept} from "@/util/StringUtil";
 import {prompts} from "@/util/mixin_prompt";
-import {mapState,mapMutations} from "vuex";
+import {mapState, mapMutations} from "vuex";
 
 export default {
   name: "PageRegistration",
@@ -46,18 +46,11 @@ export default {
   components: {
     MyPhoneInput, MyVerify, MyProtocol
   },
-  data() {
-    return {
-      ruleForm: {
-        verify: ''
-      }
-    };
-  },
-  computed:{
-    ...mapState('user',['Phone']),
+  computed: {
+    ...mapState('user', ['Phone']),
   },
   methods: {
-    ...mapMutations('user',['updatePhone']),
+    ...mapMutations('user', ['updatePhone']),
     // 跳转至登录页面
     toLoginPage() {
       this.$router.push({
@@ -80,9 +73,9 @@ export default {
       }).then(function (data) {
         console.log("后端返回的数据是", data);
         if (data.data.state) {
-          prompts.methods.successPrompt('注册成功,正在跳转至登录页面');
+          prompts.methods.successPrompt('注册成功,请完善账号');
           _this.$router.push({
-            name: 'r-login'
+            name: 'r-perfect'
           });
         } else {
           prompts.methods.errorPrompt("验证码错误");

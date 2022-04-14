@@ -5,7 +5,7 @@ function baseMassage(data,type){
         message: data,
         type: type,
         center: true,
-        duration: 1300
+        duration: 1435
     });
 }
 

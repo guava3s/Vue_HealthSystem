@@ -1,5 +1,4 @@
 <template>
-  <!--这里可能会有问题-->
   <el-input type="text" placeholder="请输入11位手机号" v-model="phoneNumber" autocomplete="off" @change="checkNumber">
     <template slot="prepend">+86</template>
   </el-input>
@@ -15,19 +14,22 @@ export default {
   props: ['requiredSwitch'],
   data() {
     return {
-      phoneNumber:''
+      phoneNumber: ''
     }
   },
   computed: {
     ...mapState('user', ['Phone']),
   },
   methods: {
-    ...mapMutations('user',['updatePhone']),
+    ...mapMutations('user', ['updatePhone']),
     // 检查手机号是否可用以及存在
     checkNumber() {
+      // 检查是否符合账号规则
       if (!elevenNumber(this.Phone)) {
+        this.$bus.$emit('updateKeyState', true);
         return prompts.methods.errorPrompt("请输入正确账号");
       }
+      this.$bus.$emit('updateKeyState', false);
       let _this = this;
       // 检查是被谁调用
       if (this.requiredSwitch) {
@@ -46,17 +48,27 @@ export default {
           }
         });
       }
+    },
+    // 设置手机号值
+    setPhoneNumber(value) {
+      this.phoneNumber = value;
     }
   },
   watch: {
     // 监听phoneNumber属性变化
     phoneNumber(newValue) {
       this.updatePhone(newValue);
+      this.$bus.$emit('setMarkPhone', newValue);
     }
+  },
+  mounted() {
+    this.$bus.$on('setPhoneNumber', this.setPhoneNumber);
+  },
+  beforeDestroy() {
+    this.$bus.$off('setPhoneNumber');
   }
 }
 </script>
 
 <style scoped>
-
 </style>

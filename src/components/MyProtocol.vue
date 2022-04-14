@@ -15,7 +15,7 @@ export default {
   },
   watch: {
     check(newValue) {
-      this.$bus.$emit('returnCheckState', newValue);
+      this.$bus.$emit('setCheckState', newValue);
     }
   }
 }

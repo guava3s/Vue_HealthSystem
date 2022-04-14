@@ -1,6 +1,6 @@
 <template>
   <div class="login-body">
-    <el-form :model="ruleForm" status-icon ref="ruleForm" label-width="80px" class="login-form">
+    <el-form status-icon ref="ruleForm" label-width="80px" class="login-form">
       <!--标题-->
       <h2 class="login-title">系统登录</h2>
 
@@ -39,7 +39,7 @@ import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
 import MyProtocol from "@/components/MyProtocol";
 import {anyExcept} from "@/util/StringUtil";
 import MyPhoneInput from "@/components/MyPhoneInput";
-import {mapState,mapMutations} from "vuex";
+import {mapState, mapMutations} from "vuex";
 
 export default {
   name: "PageLogin",
@@ -47,10 +47,7 @@ export default {
     return {
       loginState: 'el-icon-lock', // 登录状态
       loginModel: '免密登录',
-      loginModelMark: false,
-      ruleForm: {
-        pass: '',
-      },
+      loginModelMark: true, // 登录模式，用于切换免密登录-false 密码登录-true
     };
   },
   mixins: [mixin_LoginAndRegister],
@@ -59,7 +56,7 @@ export default {
     ...mapState('user', ['Phone']),
   },
   methods: {
-    ...mapMutations('user',['updatePhone']),
+    ...mapMutations('user', ['updatePhone']),
     // 登录
     loginHandle() {
       if (!anyExcept(this.mark)) {
@@ -67,7 +64,7 @@ export default {
       }
       // 裁决登录方式
       let url = '/user/phone_lg';
-      if (this.ruleForm.pass != '') {
+      if (this.loginModelMark) {
         url = '/user/pass_lg';
       }
       console.log("请求路径是:", url);
@@ -90,8 +87,9 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt(data.data.message);
-          _this.updatePhone('');
           _this.verifyCode = '';
+          _this.$bus.$emit('setPhoneNumber', '');
+          _this.$bus.$emit('setPassword','');
         }
       }).catch(function (data) {
         console.log("异常信息为:", data);
@@ -107,13 +105,6 @@ export default {
     verifyLoginHandle() {
       this.loginModelMark = !this.loginModelMark;
       if (this.loginModelMark) {
-        this.ruleForm.pass = '';
-        this.loginModel = '密码登录';
-        this.$router.replace({
-          name: 'r-verify'
-        });
-      } else {
-        this.verifyCode = '';
         this.loginModel = '免密登录';
         this.$router.replace({
           name: 'r-password',
@@ -121,19 +112,17 @@ export default {
             state: this.loginState
           }
         });
+      } else {
+        this.loginModel = '密码登录';
+        this.$router.replace({
+          name: 'r-verify'
+        });
       }
-    },
-    // 从MyPassword组件中获取用户输入的密码
-    getPassword(pd) {
-      this.ruleForm.pass = pd;
-      this.verifyCode = pd;
-      this.mark.markOther = pd !== '';
+      this.resetAll();
     }
   },
   // 挂载函数
   mounted() {
-    // 绑定返回密码事件
-    this.$bus.$on('returnPassWord', this.getPassword);
     // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
     this.$router.replace({
       name: 'r-password',
@@ -141,11 +130,6 @@ export default {
         state: this.loginState
       }
     });
-  },
-  // 销毁函数
-  beforeDestroy() {
-    // 解除事件绑定
-    this.$bus.$off('returnPassWord');
   }
 }
 </script>

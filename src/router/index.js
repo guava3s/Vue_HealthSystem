@@ -6,6 +6,7 @@ import PageRegistration from "@/pages/PageRegistration";
 import PageContainer from "@/pages/PageContainer";
 import MyPassword from "@/components/MyPassword";
 import MyVerify from "@/components/MyVerify";
+import PagePerfectAccount from "@/pages/PagePerfectAccount";
 
 
 //创建并暴露一个路由器
@@ -33,7 +34,7 @@ export default new VueRouter({
                     // 切换短信验证登录
                     name: 'r-verify',
                     path: 'myVerify',
-                    component: MyVerify,
+                    component: MyVerify
                 }
             ]
         },
@@ -41,7 +42,13 @@ export default new VueRouter({
         {
             name: 'r-register',
             path: '/pageRegistration',
-            component: PageRegistration,
+            component: PageRegistration
+        },
+        //完善账号页面
+        {
+            name: 'r-perfect',
+            path: '/pagePerfectAccount',
+            component: PagePerfectAccount
         },
         // 网站首页
         {

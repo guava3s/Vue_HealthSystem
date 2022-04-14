@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       content: '获取验证码',
-      code: '',
+      code: '', // 验证码
       state: false,
       totalTime: 60
     }
@@ -58,29 +58,23 @@ export default {
         }
       }, 1000);
     },
-    // 更新手机号
-    updatePhoneNumber(phone) {
-      this.phoneNumber = phone;
-    },
     // 更新发送键状态
-    updateState(state) {
+    updateKeyState(state) {
       this.state = state;
     }
   },
   watch: {
     // 监听验证码属性
     code(newValue) {
-      this.$bus.$emit('returnVerifyCode', newValue);
+      this.$bus.$emit('setVerifyCode', newValue);
     }
   },
   mounted() {
     // 绑定事件
-    this.$bus.$on('updatePhoneNumber', this.updatePhoneNumber);
-    this.$bus.$on('updateState', this.updateState);
+    this.$bus.$on('updateKeyState', this.updateKeyState);
   },
   beforeDestroy() {
     // 解绑事件
-    this.$bus.$off('updatePhoneNumber');
     this.$bus.$off('updateState');
   }
 }
