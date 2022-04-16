@@ -1,8 +1,8 @@
 <template>
-  <div class="register-form">
-    <el-form status-icon ref="ruleForm" label-width="80px" class="login-form">
+  <div class="Account-form">
+    <el-form status-icon ref="ruleForm" label-width="80px">
       <!--标题-->
-      <h2 class="register-title">用户注册</h2>
+      <h2 class="Account-title">用户注册</h2>
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
@@ -15,7 +15,7 @@
       </el-form-item>
 
       <!--注册按钮-->
-      <el-button :type="BtnState" @click="registerHandle" size="100px" id="register-submit">快速注册</el-button>
+      <el-button :type="BtnState" @click="registerHandle" size="100px" id="Account-submit">快速注册</el-button>
 
       <!--协议同意-->
       <el-form-item label-width="13px">
@@ -23,7 +23,7 @@
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" type="info" @click="toLoginPage">直接登录</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="toPage('r-login')">直接登录</el-link>&nbsp;
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>
@@ -47,16 +47,10 @@ export default {
     MyPhoneInput, MyVerify, MyProtocol
   },
   computed: {
-    ...mapState('user', ['Phone']),
+    ...mapState('user', ['Phone','VerifyCode']),
   },
   methods: {
-    ...mapMutations('user', ['updatePhone']),
-    // 跳转至登录页面
-    toLoginPage() {
-      this.$router.push({
-        name: 'r-login'
-      });
-    },
+    ...mapMutations('user', ['setVerifyCode']),
     // 快速注册
     registerHandle() {
       let _this = this;
@@ -64,11 +58,11 @@ export default {
         return prompts.methods.warningPrompt("请输入信息并勾选协议");
       }
       _this.$http({
-        url: '/user/phone_rg',
         method: 'post',
+        url: '/user/phone_rg',
         params: {
           phoneNumber: this.Phone,
-          verifyCode: this.verifyCode
+          verifyCode: this.VerifyCode
         }
       }).then(function (data) {
         console.log("后端返回的数据是", data);
@@ -79,39 +73,22 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt("验证码错误");
-          _this.updatePhone('');
-          _this.verifyCode = '';
         }
       });
+      this.setVerifyCode('');
     }
   }
 }
 </script>
 
 <style scoped>
-/*表单整体样式*/
-.register-form {
-  background-clip: padding-box;
-  margin: 180px auto;
-  width: 300px;
-  height: 360px;
-  padding: 35px 35px 15px 35px;
-  border: 1px solid #eaeaec;
-  box-shadow: 0 0 20px #2e3644;
-  /*设置圆角边框*/
-  border-radius: 7px;
-}
 
 /*标题样式*/
-.register-title {
-  margin: 0px auto 40px auto;
-  text-align: center;
-  color: #1fb5ac;
-}
-
-#register-submit {
+#Account-submit {
   margin-top: 3px;
   margin-left: 13px;
   width: 286px;
 }
+
+
 </style>

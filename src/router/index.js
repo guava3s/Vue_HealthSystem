@@ -1,12 +1,13 @@
 // 该文件专门用于创建整个应用的路由器
 import VueRouter from 'vue-router'
 //引入组件
-import PageLogin from "@/pages/PageLogin";
-import PageRegistration from "@/pages/PageRegistration";
-import PageContainer from "@/pages/PageContainer";
+import PageLogin from "@/pages/user/PageLogin";
+import PageRegistration from "@/pages/user/PageRegistration";
+import PageContainer from "@/pages/user/PageContainer";
 import MyPassword from "@/components/MyPassword";
 import MyVerify from "@/components/MyVerify";
-import PagePerfectAccount from "@/pages/PagePerfectAccount";
+import PagePerfectAccount from "@/pages/user/PagePerfectAccount";
+import PageResetPassword from "@/pages/user/PageResetPassword";
 
 
 //创建并暴露一个路由器
@@ -44,11 +45,17 @@ export default new VueRouter({
             path: '/pageRegistration',
             component: PageRegistration
         },
-        //完善账号页面
+        // 完善账号页面
         {
             name: 'r-perfect',
             path: '/pagePerfectAccount',
             component: PagePerfectAccount
+        },
+        // 找回密码页面
+        {
+            name: 'r-resetVerify',
+            path: '/pageResetPassword',
+            component: PageResetPassword
         },
         // 网站首页
         {

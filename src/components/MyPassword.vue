@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
   name: "MyPassword",
   data() {
@@ -19,29 +21,18 @@ export default {
   props: ['state', 'model'],
   computed: {
     placeholderContent() {
-      return this.markModel == '' ? '请设置密码(至少6位)' : '请输入密码';
+      return this.markModel === '' ? '请设置密码(至少6位)' : '请输入密码';
     }
   },
   watch: {
     // 监视password属性，将其发送给PageLogin组件
     password(newValue) {
-      this.$bus.$emit('setVerifyCode', newValue);
+      this.setVerifyCode(newValue);
+      this.$bus.$emit('setVerifyState',newValue);
     }
   },
   methods: {
-    setPassword(value) {
-      this.password = value;
-    }
-  },
-  mounted() {
-    this.$bus.$on('setPassword', this.setPassword);
-  },
-  beforeDestroy() {
-    this.$bus.$off('setPassword');
+    ...mapMutations('user', ['setVerifyCode'])
   }
 }
 </script>
-
-<style scoped>
-
-</style>

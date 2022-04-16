@@ -5,67 +5,44 @@
 </template>
 
 <script>
-import {prompts} from "@/util/mixin_prompt";
+import {mapActions, mapMutations, mapState} from "vuex";
 import {elevenNumber} from "@/util/StringUtil";
-import {mapMutations, mapState} from "vuex";
+import {prompts} from "@/util/mixin_prompt";
 
 export default {
   name: "MyPhoneInput",
-  props: ['requiredSwitch'],
+  props: ['requiredSwitch', 'phoneNum'],
   data() {
     return {
-      phoneNumber: ''
+      phoneNumber: this.phoneNum
     }
   },
   computed: {
     ...mapState('user', ['Phone']),
   },
   methods: {
-    ...mapMutations('user', ['updatePhone']),
+    ...mapActions('user', ['updatePhoneByAxios']),
+    ...mapMutations('user',['setPhone']),
     // 检查手机号是否可用以及存在
     checkNumber() {
       // 检查是否符合账号规则
-      if (!elevenNumber(this.Phone)) {
-        this.$bus.$emit('updateKeyState', true);
+      if (elevenNumber(this.phoneNumber)) {
+        this.setPhone(this.phoneNumber);
+      } else {
+        this.phoneNumber = '';
         return prompts.methods.errorPrompt("请输入正确账号");
       }
-      this.$bus.$emit('updateKeyState', false);
-      let _this = this;
       // 检查是被谁调用
       if (this.requiredSwitch) {
-        _this.$http({
-          url: '/user/verify/check',
-          method: 'post',
-          params: {
-            phoneNumber: this.Phone
-          }
-        }).then(function (data) {
-          console.log("返回的数据为:", data);
-          if (data.data.state) {
-            prompts.methods.successPrompt("该账号可以使用");
-          } else {
-            prompts.methods.warningPrompt("该账号已存在");
-          }
-        });
+        this.updatePhoneByAxios(this.phoneNumber);
       }
-    },
-    // 设置手机号值
-    setPhoneNumber(value) {
-      this.phoneNumber = value;
     }
   },
   watch: {
     // 监听phoneNumber属性变化
     phoneNumber(newValue) {
-      this.updatePhone(newValue);
       this.$bus.$emit('setMarkPhone', newValue);
     }
-  },
-  mounted() {
-    this.$bus.$on('setPhoneNumber', this.setPhoneNumber);
-  },
-  beforeDestroy() {
-    this.$bus.$off('setPhoneNumber');
   }
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
-  <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="code">
-    <el-button id="login-verify-send" slot="append" @click="getCode" :disabled="state">{{ content }}</el-button>
+  <el-input id="login-verify-code" placeholder="6 位短信验证码" v-model="verifyCode">
+    <el-button id="login-verify-send" slot="append" @click="getCodeHandle" :disabled="disabled">{{ content }}</el-button>
   </el-input>
 </template>
 
 <script>
 
 import {prompts} from "@/util/mixin_prompt";
-import {mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "MyVerify",
@@ -16,8 +16,8 @@ export default {
   data() {
     return {
       content: '获取验证码',
-      code: '', // 验证码
-      state: false,
+      verifyCode: '', // 验证码
+      disabled: false,
       totalTime: 60
     }
   },
@@ -25,27 +25,16 @@ export default {
     ...mapState('user', ['Phone'])
   },
   methods: {
-    getCode() {
-      console.log();
+    ...mapActions('user', ['updateVerifyCodeAndSend']),
+    ...mapMutations('user', ['setVerifyCode']),
+    getCodeHandle() {
       if (this.Phone === '') {
         return prompts.methods.warningPrompt('手机号不能为空');
       }
-      this.$http({
-        url: '/user/verify/code',
-        method: 'get',
-        params: {
-          phoneNumber: this.Phone
-        }
-      }).then(function (data) {
-        console.log(data);
-        if (data.data.state) {
-          prompts.methods.successPrompt('发送成功');
-        } else {
-          prompts.methods.warningPrompt(data.data.message);
-        }
-      });
+      // 更新验证码并发送手机号到后端校验
+      this.updateVerifyCodeAndSend(this.verifyCode);
       // 60s倒数
-      this.state = true;//点击之后设置按钮不可取
+      this.disabled = true;//点击之后设置按钮不可取
       this.content = this.totalTime + "s";//按钮内文本
       let clock = window.setInterval(() => {
         this.totalTime--;
@@ -54,32 +43,17 @@ export default {
           window.clearInterval(clock);
           this.content = "获取验证码";
           this.totalTime = 60;
-          this.state = false; //这里重新开启
+          this.disabled = false; //这里重新开启
         }
       }, 1000);
-    },
-    // 更新发送键状态
-    updateKeyState(state) {
-      this.state = state;
     }
   },
   watch: {
     // 监听验证码属性
-    code(newValue) {
-      this.$bus.$emit('setVerifyCode', newValue);
+    verifyCode(newValue) {
+      this.setVerifyCode(newValue);
+      this.$bus.$emit('setVerifyState', newValue);
     }
-  },
-  mounted() {
-    // 绑定事件
-    this.$bus.$on('updateKeyState', this.updateKeyState);
-  },
-  beforeDestroy() {
-    // 解绑事件
-    this.$bus.$off('updateState');
   }
 }
 </script>
-
-<style>
-
-</style>

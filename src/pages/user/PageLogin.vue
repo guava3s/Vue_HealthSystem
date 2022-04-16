@@ -1,12 +1,12 @@
 <template>
-  <div class="login-body">
-    <el-form status-icon ref="ruleForm" label-width="80px" class="login-form">
+  <div class="Account-form">
+    <el-form status-icon label-width="80px">
       <!--标题-->
-      <h2 class="login-title">系统登录</h2>
+      <h2 class="Account-title">系统登录</h2>
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput/>
+        <MyPhoneInput :phone-num="Phone"/>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
@@ -16,16 +16,17 @@
 
       <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">{{ loginModel }}</el-link>&nbsp;
       <br>
+
       <!--登录按钮-->
-      <el-button :type="BtnState" @click="loginHandle" size="100px" id="login-submit">登录</el-button>
+      <el-button :type="BtnState" @click="loginHandle" size="100px" id="Account-submit">登录</el-button>
       <!--协议同意-->
       <el-form-item label-width="13px">
         <MyProtocol/>
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" type="info">忘记密码</el-link>&nbsp;
-        <el-link :underline="false" type="info" @click="toRegisterPage">快速注册</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="toPage('r-resetVerify')">忘记密码</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="toPage('r-register')">快速注册</el-link>&nbsp;
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>
@@ -47,35 +48,31 @@ export default {
     return {
       loginState: 'el-icon-lock', // 登录状态
       loginModel: '免密登录',
-      loginModelMark: true, // 登录模式，用于切换免密登录-false 密码登录-true
+      loginModelMark: true, // 登录模式，用于切换密码登录-true 与 免密登录-false
     };
   },
   mixins: [mixin_LoginAndRegister],
   components: {MyPhoneInput, MyProtocol},
   computed: {
-    ...mapState('user', ['Phone']),
+    ...mapState('user', ['Phone', 'VerifyCode']),
   },
   methods: {
-    ...mapMutations('user', ['updatePhone']),
+    ...mapMutations('user', ['setPhone', 'setVerifyCode']),
     // 登录
     loginHandle() {
       if (!anyExcept(this.mark)) {
         return prompts.methods.warningPrompt("请输入信息并勾选协议");
       }
       // 裁决登录方式
-      let url = '/user/phone_lg';
-      if (this.loginModelMark) {
-        url = '/user/pass_lg';
-      }
+      let url = this.loginModelMark ? '/user/pass_lg' : '/user/phone_lg';
       console.log("请求路径是:", url);
-      // 登录请求简写形式
       let _this = this;
       this.$http({
         url: url,
         method: 'post',
         params: {
           phoneNumber: _this.Phone,
-          verifyCode: _this.verifyCode
+          verifyCode: _this.VerifyCode
         }
       }).then(function (data) {
         console.log("后端返回的数据是", data);
@@ -87,23 +84,16 @@ export default {
           });
         } else {
           prompts.methods.errorPrompt(data.data.message);
-          _this.verifyCode = '';
-          _this.$bus.$emit('setPhoneNumber', '');
-          _this.$bus.$emit('setPassword','');
         }
       }).catch(function (data) {
         console.log("异常信息为:", data);
       });
     },
-    // 跳转到注册页面
-    toRegisterPage() {
-      this.$router.push({
-        name: 'r-register'
-      });
-    },
-    // 点击事件:免密登录
+    // 切换登录方式
     verifyLoginHandle() {
       this.loginModelMark = !this.loginModelMark;
+      this.resetAll();
+      this.setVerifyCode('');
       if (this.loginModelMark) {
         this.loginModel = '免密登录';
         this.$router.replace({
@@ -118,7 +108,6 @@ export default {
           name: 'r-verify'
         });
       }
-      this.resetAll();
     }
   },
   // 挂载函数
@@ -136,32 +125,12 @@ export default {
 
 <style scoped>
 
-/*表单整体样式*/
-.login-form {
-  background-clip: padding-box;
-  margin: 180px auto;
-  width: 300px;
-  height: 360px;
-  padding: 35px 35px 15px 35px;
-  border: 1px solid #eaeaec;
-  box-shadow: 0 0 20px #2e3644;
-  /*设置圆角边框*/
-  border-radius: 7px;
-}
-
-/*标题样式*/
-.login-title {
-  margin: 0px auto 40px auto;
-  text-align: center;
-  color: #1fb5ac;
-}
-
 #withoutPass {
   margin-bottom: 10px;
   margin-left: 13px;
 }
 
-#login-submit {
+#Account-submit {
   margin-top: 3px;
   margin-left: 13px;
   width: 286px;

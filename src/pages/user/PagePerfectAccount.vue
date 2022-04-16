@@ -1,9 +1,9 @@
 <template>
-  <div class="perfect-form">
-    <el-form status-icon ref="ruleForm" label-width="80px" class="login-form">
+  <div class="Account-form">
+    <el-form status-icon label-width="80px">
       <!--标题-->
-      <h2 class="perfect-title">完善账号</h2>
-      <h3 class="perfect-title">填写昵称和密码</h3>
+      <h2 class="Account-title">完善账号</h2>
+      <h3 class="Account-title">填写昵称和密码</h3>
 
       <!--昵称栏-->
       <el-form-item class="item-text" label-width="13px">
@@ -16,7 +16,7 @@
       </el-form-item>
 
       <!--确认按钮-->
-      <el-button :type="BtnStateUp" @click="commitHandle" size="100px" id="perfect-submit">确认</el-button>
+      <el-button :type="BtnStateUp" @click="commitHandle" size="100px" id="Account-submit">确认</el-button>
     </el-form>
 
   </div>
@@ -25,7 +25,7 @@
 <script>
 import MyPassword from "@/components/MyPassword";
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import {prompts} from "@/util/mixin_prompt";
 
 export default {
@@ -37,9 +37,22 @@ export default {
       username: ''
     }
   },
+  computed: {
+    ...mapState('user', ['Phone', 'VerifyCode']),
+    BtnStateUp() {
+      console.log(this.CacheVerifyCode);
+      if (this.username !== '' && this.VerifyCode !== '') {
+        return 'success';
+      } else {
+        return 'info';
+      }
+    }
+  },
   methods: {
+    ...mapMutations('user', ['flushAllProperty']),
+    // 确认并提交
     commitHandle() {
-      if (this.username !== '' && this.verifyCode !== '') {
+      if (this.username !== '' && this.VerifyCode !== '') {
         let _this = this;
         this.$http({
           url: '/user/perfect_rg',
@@ -47,7 +60,7 @@ export default {
           params: {
             name: this.username,
             phoneNumber: this.Phone,
-            verifyCode: this.verifyCode
+            verifyCode: this.VerifyCode
           }
         }).then(function (data) {
           if (data.data.state) {
@@ -61,7 +74,8 @@ export default {
       } else {
         prompts.methods.errorPrompt('请输入信息');
       }
-
+      // 清空仓库所有数据
+      this.flushAllProperty('');
     },
     formatCheck() {
       console.log(this);
@@ -70,42 +84,12 @@ export default {
         this.$bus.$emit('setPassword', '');
       }
     }
-  },
-  computed: {
-    ...mapState('user', ['Phone']),
-    BtnStateUp() {
-      if (this.username !== '' && this.verifyCode !== '') {
-        return 'success';
-      } else {
-        return 'info';
-      }
-    }
   }
 }
 </script>
 
 <style scoped>
-/*表单整体样式*/
-.perfect-form {
-  background-clip: padding-box;
-  margin: 180px auto;
-  width: 300px;
-  height: 360px;
-  padding: 35px 35px 15px 35px;
-  border: 1px solid #eaeaec;
-  box-shadow: 0 0 20px #2e3644;
-  /*设置圆角边框*/
-  border-radius: 7px;
-}
-
-/*标题样式*/
-.perfect-title {
-  margin: 0px auto 40px auto;
-  text-align: center;
-  color: #1fb5ac;
-}
-
-#perfect-submit {
+#Account-submit {
   margin-top: 3px;
   margin-left: 13px;
   width: 286px;
