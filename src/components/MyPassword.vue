@@ -3,7 +3,7 @@
             v-model="password"
             autocomplete="off"
             :placeholder="placeholderContent"
-            :prefix-icon="state">
+            prefix-icon="el-icon-lock">
   </el-input>
 </template>
 
@@ -15,10 +15,10 @@ export default {
   data() {
     return {
       markModel: this.model,
-      password: ''
+      password: '',
     }
   },
-  props: ['state', 'model'],
+  props: ['model'],
   computed: {
     placeholderContent() {
       return this.markModel === '' ? '请设置密码(至少6位)' : '请输入密码';
@@ -28,11 +28,11 @@ export default {
     // 监视password属性，将其发送给PageLogin组件
     password(newValue) {
       this.setVerifyCode(newValue);
-      this.$bus.$emit('setVerifyState',newValue);
+      this.$bus.$emit('setVerifyState', newValue);
     }
   },
   methods: {
-    ...mapMutations('user', ['setVerifyCode'])
+    ...mapMutations('user', ['setVerifyCode', 'setSerializedAuthCode'])
   }
 }
 </script>

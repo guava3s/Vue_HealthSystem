@@ -31,8 +31,13 @@ const mixin_LoginAndRegister = {
             this.mark.markOther = false;
             this.mark.markCheck = false;
         },
-        toPage(name) {
+        pushPage(name) {
             this.$router.push({
+                name: name
+            });
+        },
+        replacePage(name){
+            this.$router.replace({
                 name: name
             });
         }

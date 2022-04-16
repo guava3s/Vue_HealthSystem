@@ -1,6 +1,6 @@
 <template>
   <div class="Account-form">
-    <el-form status-icon ref="ruleForm" label-width="80px">
+    <el-form status-icon  label-width="80px">
       <!--标题-->
       <h2 class="Account-title">用户注册</h2>
 
@@ -23,7 +23,7 @@
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" type="info" @click="toPage('r-login')">直接登录</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="pushPage('r-login')">直接登录</el-link>&nbsp;
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>

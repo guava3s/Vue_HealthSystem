@@ -11,7 +11,7 @@ import {prompts} from "@/util/mixin_prompt";
 
 export default {
   name: "MyPhoneInput",
-  props: ['requiredSwitch', 'phoneNum'],
+  props: ['requiredSwitch', 'phoneNum', 'auth'],
   data() {
     return {
       phoneNumber: this.phoneNum
@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     ...mapActions('user', ['updatePhoneByAxios']),
-    ...mapMutations('user',['setPhone']),
+    ...mapMutations('user', ['setPhone','setUrl']),
     // 检查手机号是否可用以及存在
     checkNumber() {
       // 检查是否符合账号规则
@@ -35,6 +35,11 @@ export default {
       // 检查是被谁调用
       if (this.requiredSwitch) {
         this.updatePhoneByAxios(this.phoneNumber);
+      }
+      if (this.auth) {
+        this.setUrl('http://localhost:8000/user/verify/codeAuth');
+      }else{
+        this.setUrl('http://localhost:8000/user/verify/code');
       }
     }
   },

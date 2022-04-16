@@ -8,7 +8,8 @@ export default {
         // 更新验证码并发送至后端校验
         updateVerifyCodeAndSend(context, value) {
             axios({
-                url: 'http://localhost:8000/user/verify/code',
+                method: 'post',
+                url: context.state.url,
                 params: {
                     phoneNumber: context.state.Phone
                 }
@@ -17,6 +18,7 @@ export default {
                 if (data.data.state) {
                     prompts.methods.successPrompt('发送成功');
                     context.commit('setVerifyCode', value);
+                    context.commit('setSerializedAuthCode', data.data.serializedCode);
                 } else {
                     prompts.methods.warningPrompt(data.data.message);
                 }
@@ -59,10 +61,18 @@ export default {
         },
         setVerifyCode(state, value) {
             state.VerifyCode = value;
+        },
+        setSerializedAuthCode(state, value) {
+            state.SerializedCode = value;
+        },
+        setUrl(state, value) {
+            state.url = value;
         }
     },
     state: {
         Phone: '',
         VerifyCode: '',// 密码/验证码
+        SerializedCode: '', // 序列化权限码
+        url: 'http://localhost:8000/user/verify/code'
     }
 }

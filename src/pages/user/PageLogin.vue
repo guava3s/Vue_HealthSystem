@@ -15,7 +15,6 @@
       </el-form-item>
 
       <el-link :underline="false" type="info" @click="verifyLoginHandle" id="withoutPass">{{ loginModel }}</el-link>&nbsp;
-      <br>
 
       <!--登录按钮-->
       <el-button :type="BtnState" @click="loginHandle" size="100px" id="Account-submit">登录</el-button>
@@ -25,8 +24,8 @@
       </el-form-item>
 
       <el-form-item label-width="13px">
-        <el-link :underline="false" type="info" @click="toPage('r-resetVerify')">忘记密码</el-link>&nbsp;
-        <el-link :underline="false" type="info" @click="toPage('r-register')">快速注册</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="pushPage('r-resetVerify')">忘记密码</el-link>&nbsp;
+        <el-link :underline="false" type="info" @click="pushPage('r-register')">快速注册</el-link>&nbsp;
         <el-link :underline="false" type="info">遇到问题</el-link>&nbsp;
       </el-form-item>
     </el-form>
@@ -46,7 +45,6 @@ export default {
   name: "PageLogin",
   data() {
     return {
-      loginState: 'el-icon-lock', // 登录状态
       loginModel: '免密登录',
       loginModelMark: true, // 登录模式，用于切换密码登录-true 与 免密登录-false
     };
@@ -77,14 +75,9 @@ export default {
       }).then(function (data) {
         console.log("后端返回的数据是", data);
         if (data.data.state) {
-          prompts.methods.successPrompt("登录成功");
-          // 在这里要注意this不是VC实例对象，需要从外部赋值
-          _this.$router.push({
-            name: 'r-container'
-          });
-        } else {
-          prompts.methods.errorPrompt(data.data.message);
+          _this.pushPage('r-container');
         }
+        prompts.methods.successPrompt(data.data.message);
       }).catch(function (data) {
         console.log("异常信息为:", data);
       });
@@ -96,17 +89,10 @@ export default {
       this.setVerifyCode('');
       if (this.loginModelMark) {
         this.loginModel = '免密登录';
-        this.$router.replace({
-          name: 'r-password',
-          params: {
-            state: this.loginState
-          }
-        });
+        this.replacePage('r-password');
       } else {
         this.loginModel = '密码登录';
-        this.$router.replace({
-          name: 'r-verify'
-        });
+        this.replacePage('r-verify');
       }
     }
   },
@@ -114,10 +100,7 @@ export default {
   mounted() {
     // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
     this.$router.replace({
-      name: 'r-password',
-      params: {
-        state: this.loginState
-      }
+      name: 'r-password'
     });
   }
 }

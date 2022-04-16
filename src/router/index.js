@@ -13,13 +13,13 @@ import PageResetPassword from "@/pages/user/PageResetPassword";
 //创建并暴露一个路由器
 export default new VueRouter({
     routes: [
-        // 初始页面
         {
+            // 初始页面
             path: '/',
             redirect: '/pageLogin'
         },
-        // 登录
         {
+            // 登录
             name: 'r-login',
             path: '/pageLogin',
             component: PageLogin,
@@ -27,9 +27,8 @@ export default new VueRouter({
                 {
                     // 切换密码登录
                     name: 'r-password',
-                    path: 'myPassword/:state',
-                    component: MyPassword,
-                    props: true
+                    path: 'myPassword',
+                    component: MyPassword
                 },
                 {
                     // 切换短信验证登录
@@ -39,23 +38,40 @@ export default new VueRouter({
                 }
             ]
         },
-        // 注册页面
         {
+            // 注册页面
             name: 'r-register',
             path: '/pageRegistration',
             component: PageRegistration
         },
-        // 完善账号页面
         {
+            // 完善账号页面
             name: 'r-perfect',
             path: '/pagePerfectAccount',
             component: PagePerfectAccount
         },
-        // 找回密码页面
         {
+            // 找回密码页面
             name: 'r-resetVerify',
             path: '/pageResetPassword',
-            component: PageResetPassword
+            component: PageResetPassword,
+            children: [
+                {
+                    // 使用密码框
+                    name: 'r-use-pass',
+                    path: 'resetPassword',
+                    component: MyPassword,
+                    meta: {
+                        url: '/user/verify/codeAuth'
+                    },
+                },
+                {
+                    // 切换短信验证登录
+                    name: 'r-use-verify',
+                    path: 'putVerify',
+                    component: MyVerify
+                }
+            ]
         },
         // 网站首页
         {

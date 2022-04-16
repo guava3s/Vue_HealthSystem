@@ -1,36 +1,29 @@
 <template>
   <div class="Account-form">
-    <el-form status-icon ref="ruleForm" label-width="80px">
+    <el-form status-icon label-width="80px">
       <!--标题-->
       <h2 class="Account-title">重置密码</h2>
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput/>
+        <MyPhoneInput :auth="true"/>
       </el-form-item>
 
-      <!--密码栏-->
+      <!--密码栏 / 验证码栏-->
       <el-form-item label-width="13px">
-        <MyPassword/>
-      </el-form-item>
-
-      <!--验证码栏-->
-      <el-form-item label-width="13px">
-        <MyVerify/>
+        <router-view></router-view>
       </el-form-item>
 
       <!--确认按钮-->
       <el-button :type="BtnStateUp" @click="commitHandle" size="100px" id="Account-submit">确认修改</el-button>
     </el-form>
-
   </div>
 </template>
 
 <script>
 import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import {mapState} from "vuex";
-import MyVerify from "@/components/MyVerify";
-import MyPassword from "@/components/MyPassword";
+import {mapMutations, mapState} from "vuex";
+import {prompts} from "@/util/mixin_prompt";
 import MyPhoneInput from "@/components/MyPhoneInput";
 
 export default {
@@ -38,22 +31,61 @@ export default {
   mixins: [mixin_LoginAndRegister],
   data() {
     return {
-      phoneNum: ''
+      switched: false, // 默认为未被切换的
+      url: '/user/verify/codeAuthCheck', // 默认请求路径为检查验证码与序列化权限码
     }
   },
   components: {
-    MyPhoneInput, MyVerify, MyPassword
+    MyPhoneInput
   },
   methods: {
+    ...mapMutations('user', ['setVerifyCode']),
     commitHandle() {
-
+      // 裁决登录方式
+      let _this = this;
+      this.$http({
+        method: 'post',
+        url: _this.url,
+        params: {
+          phoneNumber: _this.Phone,
+          verifyCode: _this.VerifyCode,
+          authorityCode: _this.SerializedCode
+        }
+      }).then(function (data) {
+        console.log("后端返回的数据是", data);
+        if (data.data.state) {
+          if (!_this.switched) {
+            _this.switched = !_this.switched;
+            _this.url = '/user/reset_rg';
+            _this.pushPage('r-use-pass');
+          } else {
+            _this.replacePage('r-login');
+          }
+          prompts.methods.successPrompt(data.data.message);
+        } else {
+          prompts.methods.errorPrompt(data.data.message);
+        }
+      }).catch(function (data) {
+        console.log("异常信息为:", data);
+      });
+      this.setVerifyCode('');
     }
   },
   computed: {
-    ...mapState('user', ['Phone']),
+    ...mapState('user', ['Phone', 'VerifyCode', 'SerializedCode']),
     BtnStateUp() {
-      return '';
+      if (this.Phone !== '' && this.VerifyCode !== '') {
+        return 'success';
+      } else {
+        return 'info';
+      }
     }
+  },
+  mounted() {
+    // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
+    this.$router.replace({
+      name: 'r-use-verify'
+    });
   }
 }
 </script>
