@@ -40,7 +40,6 @@ export default {
   computed: {
     ...mapState('user', ['Phone', 'VerifyCode']),
     BtnStateUp() {
-      console.log(this.CacheVerifyCode);
       if (this.username !== '' && this.VerifyCode !== '') {
         return 'success';
       } else {
@@ -49,7 +48,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('user', ['flushAllProperty']),
+    ...mapMutations('user', ['flushAllProperty', 'setVerifyCode']),
     // 确认并提交
     commitHandle() {
       if (this.username !== '' && this.VerifyCode !== '') {
@@ -78,10 +77,10 @@ export default {
       this.flushAllProperty('');
     },
     formatCheck() {
-      console.log(this);
       if (this.$refs.myPassword.password.length < 6) {
-        prompts.methods.errorPrompt('密码长度小于6,请重新输入');
-        this.$bus.$emit('setPassword', '');
+        this.$refs.myPassword.password = '';
+        this.setVerifyCode('');
+        return prompts.methods.errorPrompt('密码长度小于6,请重新输入');
       }
     }
   }

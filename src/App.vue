@@ -5,10 +5,8 @@
 </template>
 
 <script>
-
-
 export default {
-  name: 'App'
+  name: 'App',
 }
 </script>
 <style>
@@ -23,6 +21,7 @@ export default {
   /*设置圆角边框*/
   border-radius: 7px;
 }
+
 .Account-title {
   margin: 0px auto 40px auto;
   text-align: center;

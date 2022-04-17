@@ -31,6 +31,7 @@ export default {
       if (this.Phone === '') {
         return prompts.methods.warningPrompt('手机号不能为空');
       }
+      prompts.methods.successPrompt('发送成功');
       // 更新验证码并发送手机号到后端校验
       this.updateVerifyCodeAndSend(this.verifyCode);
       // 60s倒数

@@ -16,7 +16,6 @@ export default {
             }).then(function (data) {
                 console.log(data);
                 if (data.data.state) {
-                    prompts.methods.successPrompt('发送成功');
                     context.commit('setVerifyCode', value);
                     context.commit('setSerializedAuthCode', data.data.serializedCode);
                 } else {
@@ -54,7 +53,8 @@ export default {
     mutations: {
         flushAllProperty(state, value) {
             state.Phone = value;
-            state.CacheVerifyCode = value;
+            state.VerifyCode = value;
+            state.SerializedCode = value;
         },
         setPhone(state, value) {
             state.Phone = value;
