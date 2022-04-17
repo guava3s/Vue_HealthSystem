@@ -6,7 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput :auth="true"/>
+        <MyPhoneInput :auth="true" :requiredCheck="false"/>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->

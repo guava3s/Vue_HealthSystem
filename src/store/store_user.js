@@ -46,6 +46,7 @@ export default {
                     context.commit('setPhone', value);
                 } else {
                     prompts.methods.warningPrompt("该账号已存在");
+                    context.commit('setPhone', '');
                 }
             });
         }
