@@ -17,6 +17,17 @@ export default {
     check(newValue) {
       this.$bus.$emit('setCheckState', newValue);
     }
+  },
+  methods: {
+    setProtocolChecked(value) {
+      this.check = value;
+    }
+  },
+  mounted() {
+    this.$bus.$on('setProtocolChecked', this.setProtocolChecked);
+  },
+  beforeDestroy() {
+    this.$bus.$off('setProtocolChecked');
   }
 }
 </script>

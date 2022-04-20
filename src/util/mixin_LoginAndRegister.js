@@ -27,7 +27,6 @@ const mixin_LoginAndRegister = {
         },
         // 重置状态
         resetAll() {
-            this.mark.markPhone = false;
             this.mark.markOther = false;
             this.mark.markCheck = false;
         },

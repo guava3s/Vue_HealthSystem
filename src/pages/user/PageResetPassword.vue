@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="Account-form">
     <el-form status-icon label-width="80px">
       <!--标题-->

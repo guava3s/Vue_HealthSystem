@@ -6,7 +6,7 @@
 
       <!--手机栏-->
       <el-form-item class="item-text" label-width="13px">
-        <MyPhoneInput :phone-num="Phone"/>
+        <MyPhoneInput :phone-num="Phone" :required-check="false"/>
       </el-form-item>
 
       <!--密码栏 / 验证码栏-->
@@ -76,8 +76,10 @@ export default {
         console.log("后端返回的数据是", data);
         if (data.data.state) {
           _this.pushPage('r-container');
+          prompts.methods.successPrompt(data.data.message);
+        } else {
+          prompts.methods.errorPrompt(data.data.message);
         }
-        prompts.methods.successPrompt(data.data.message);
       }).catch(function (data) {
         console.log("异常信息为:", data);
       });
@@ -87,6 +89,7 @@ export default {
       this.loginModelMark = !this.loginModelMark;
       this.resetAll();
       this.setVerifyCode('');
+      this.$bus.$emit('setProtocolChecked', false);
       if (this.loginModelMark) {
         this.loginModel = '免密登录';
         this.replacePage('r-password');

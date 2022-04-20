@@ -34,35 +34,36 @@ export default {
         return prompts.methods.errorPrompt("请输入正确账号");
       }
       let _this = this;
-      // 检查是被谁调用
-      this.$http({
-        method: 'post',
-        url: '/user/verify/check',
-        params: {
-          phoneNumber: this.Phone
-        }
-      }).then(function (data) {
-        console.log("返回的数据为:", data);
-        /*
-        后端返回true：表示不存在，false表示存在
-        注册：检查手机号是否不存在
-            --true-》    true则表示该账号可以使用
-            --false-》   false该账号不可使用
-        登录：检查
-        重置：检查账号是否存在
-            --true-》    false该账号不可使用
-            --false-》   true该账号可以使用
-         */
-        // 同或运算
-        if (!(_this.requiredCheck ^ data.data.state)) {
-          _this.setPhone(_this.phoneNumber);
-        } else {
-          prompts.methods.warningPrompt("该账号不可使用");
-          _this.setPhone('');
-          _this.phoneNumber = '';
-        }
-      });
-
+      if (this.requiredCheck) {
+        // 检查是被谁调用
+        this.$http({
+          method: 'post',
+          url: '/user/verify/check',
+          params: {
+            phoneNumber: this.Phone
+          }
+        }).then(function (data) {
+          console.log("返回的数据为:", data);
+          /*
+          后端返回true：表示不存在，false表示存在
+          注册：检查手机号是否不存在
+              --true-》    true则表示该账号可以使用
+              --false-》   false该账号不可使用
+          登录：检查
+          重置：检查账号是否存在
+              --true-》    false该账号不可使用
+              --false-》   true该账号可以使用
+           */
+          // 同或运算
+          if (data.data.state) {
+            _this.setPhone(_this.phoneNumber);
+          } else {
+            prompts.methods.warningPrompt("该账号不可使用");
+            _this.setPhone('');
+            _this.phoneNumber = '';
+          }
+        });
+      }
       if (this.auth) {
         this.setUrl('http://localhost:8000/user/verify/codeAuth');
       } else {
