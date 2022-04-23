@@ -6,7 +6,7 @@
 
 <script>
 
-import {prompts} from "@/util/mixin_prompt";
+import {prompts} from "@/mixin/mixin_prompt";
 import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {

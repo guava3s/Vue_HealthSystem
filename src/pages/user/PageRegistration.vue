@@ -1,6 +1,6 @@
 <template>
   <div class="Account-form">
-    <el-form status-icon  label-width="80px">
+    <el-form status-icon label-width="80px">
       <!--标题-->
       <h2 class="Account-title">用户注册</h2>
 
@@ -32,22 +32,23 @@
 </template>
 
 <script>
-import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import MyVerify from "@/components/MyVerify";
-import MyProtocol from "@/components/MyProtocol";
-import MyPhoneInput from "@/components/MyPhoneInput";
+import {mixin_LoginAndRegister} from "@/mixin/mixin_LoginAndRegister";
+import MyVerify from "@/components/user/MyVerify";
+import MyProtocol from "@/components/user/MyProtocol";
+import MyPhoneInput from "@/components/user/MyPhoneInput";
 import {anyExcept} from "@/util/StringUtil";
-import {prompts} from "@/util/mixin_prompt";
+import {prompts} from "@/mixin/mixin_prompt";
 import {mapState, mapMutations} from "vuex";
+import {mixin_routerChange} from "@/mixin/mixin_routerChange";
 
 export default {
   name: "PageRegistration",
-  mixins: [mixin_LoginAndRegister],
+  mixins: [mixin_LoginAndRegister, mixin_routerChange],
   components: {
     MyPhoneInput, MyVerify, MyProtocol
   },
   computed: {
-    ...mapState('user', ['Phone','VerifyCode']),
+    ...mapState('user', ['Phone', 'VerifyCode']),
   },
   methods: {
     ...mapMutations('user', ['setVerifyCode']),
@@ -68,9 +69,7 @@ export default {
         console.log("后端返回的数据是", data);
         if (data.data.state) {
           prompts.methods.successPrompt('注册成功,请完善账号');
-          _this.$router.push({
-            name: 'r-perfect'
-          });
+          _this.pushPage('r-perfect');
         } else {
           prompts.methods.errorPrompt("验证码错误");
         }

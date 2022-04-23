@@ -1,4 +1,4 @@
- <template>
+<template>
   <div class="Account-form">
     <el-form status-icon label-width="80px">
       <!--标题-->
@@ -21,14 +21,15 @@
 </template>
 
 <script>
-import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
+import {mixin_LoginAndRegister} from "@/mixin/mixin_LoginAndRegister";
 import {mapMutations, mapState} from "vuex";
-import {prompts} from "@/util/mixin_prompt";
-import MyPhoneInput from "@/components/MyPhoneInput";
+import {prompts} from "@/mixin/mixin_prompt";
+import MyPhoneInput from "@/components/user/MyPhoneInput";
+import {mixin_routerChange} from "@/mixin/mixin_routerChange";
 
 export default {
   name: "PageResetPassword",
-  mixins: [mixin_LoginAndRegister],
+  mixins: [mixin_LoginAndRegister, mixin_routerChange],
   data() {
     return {
       switched: false, // 默认为未被切换的
@@ -39,7 +40,7 @@ export default {
     MyPhoneInput
   },
   methods: {
-    ...mapMutations('user', ['setVerifyCode']),
+    ...mapMutations('user', ['setVerifyCode', 'setPhone']),
     commitHandle() {
       // 裁决登录方式
       let _this = this;
@@ -60,6 +61,7 @@ export default {
             _this.pushPage('r-use-pass');
           } else {
             _this.replacePage('r-login');
+            _this.setPhone('');
           }
           prompts.methods.successPrompt(data.data.message);
         } else {
@@ -83,9 +85,7 @@ export default {
   },
   mounted() {
     // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
-    this.$router.replace({
-      name: 'r-use-verify'
-    });
+    this.replacePage('r-use-verify')
   }
 }
 </script>

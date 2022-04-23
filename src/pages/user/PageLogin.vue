@@ -34,12 +34,13 @@
 
 <script>
 
-import {prompts} from "@/util/mixin_prompt";
-import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
-import MyProtocol from "@/components/MyProtocol";
+import {prompts} from "@/mixin/mixin_prompt";
+import {mixin_LoginAndRegister} from "@/mixin/mixin_LoginAndRegister";
+import MyProtocol from "@/components/user/MyProtocol";
 import {anyExcept} from "@/util/StringUtil";
-import MyPhoneInput from "@/components/MyPhoneInput";
+import MyPhoneInput from "@/components/user/MyPhoneInput";
 import {mapState, mapMutations} from "vuex";
+import {mixin_routerChange} from "@/mixin/mixin_routerChange";
 
 export default {
   name: "PageLogin",
@@ -49,13 +50,13 @@ export default {
       loginModelMark: true, // 登录模式，用于切换密码登录-true 与 免密登录-false
     };
   },
-  mixins: [mixin_LoginAndRegister],
+  mixins: [mixin_LoginAndRegister, mixin_routerChange],
   components: {MyPhoneInput, MyProtocol},
   computed: {
     ...mapState('user', ['Phone', 'VerifyCode']),
   },
   methods: {
-    ...mapMutations('user', ['setPhone', 'setVerifyCode']),
+    ...mapMutations('user', ['setPhone', 'setVerifyCode', 'setUserName']),
     // 登录
     loginHandle() {
       if (!anyExcept(this.mark)) {
@@ -75,6 +76,8 @@ export default {
       }).then(function (data) {
         console.log("后端返回的数据是", data);
         if (data.data.state) {
+          _this.setPhone(data.data.content.phoneNumber);
+          _this.setUserName(data.data.content.name);
           _this.pushPage('r-container');
           prompts.methods.successPrompt(data.data.message);
         } else {
@@ -102,9 +105,7 @@ export default {
   // 挂载函数
   mounted() {
     // 初始化路由代理组件为MyPassword组件,并传递登录状态给MyPassword组件
-    this.$router.replace({
-      name: 'r-password'
-    });
+    this.replacePage('r-password')
   }
 }
 </script>

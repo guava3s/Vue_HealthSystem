@@ -15,7 +15,10 @@ Vue.prototype.$http = axios.create({
     // timeout: 1000,
     headers: {
         'Content-Type': 'application/json'
-    }
+    },
+    // 发送异步请求时，避免session问题
+    withCredentials: true,
+    crossDomain: true
 });
 
 //关闭Vue的生产提示

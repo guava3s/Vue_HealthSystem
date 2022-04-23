@@ -1,4 +1,4 @@
-import {prompts} from "@/util/mixin_prompt";
+import {prompts} from "@/mixin/mixin_prompt";
 import axios from "axios"
 import {elevenNumber} from "@/util/StringUtil"; // 引入axios
 
@@ -68,12 +68,16 @@ export default {
         },
         setUrl(state, value) {
             state.url = value;
+        },
+        setUserName(state, value) {
+            state.UserName = value;
         }
     },
     state: {
         Phone: '',
         VerifyCode: '',// 密码/验证码
         SerializedCode: '', // 序列化权限码
-        url: 'http://localhost:8000/user/verify/code'
+        UserName: '',
+        url: 'http://localhost:8000/user/verify/code',
     }
 }

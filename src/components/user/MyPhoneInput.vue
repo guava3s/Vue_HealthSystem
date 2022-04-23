@@ -7,7 +7,7 @@
 <script>
 import {mapActions, mapMutations, mapState} from "vuex";
 import {elevenNumber} from "@/util/StringUtil";
-import {prompts} from "@/util/mixin_prompt";
+import {prompts} from "@/mixin/mixin_prompt";
 
 export default {
   name: "MyPhoneInput",
@@ -44,17 +44,6 @@ export default {
           }
         }).then(function (data) {
           console.log("返回的数据为:", data);
-          /*
-          后端返回true：表示不存在，false表示存在
-          注册：检查手机号是否不存在
-              --true-》    true则表示该账号可以使用
-              --false-》   false该账号不可使用
-          登录：检查
-          重置：检查账号是否存在
-              --true-》    false该账号不可使用
-              --false-》   true该账号可以使用
-           */
-          // 同或运算
           if (data.data.state) {
             _this.setPhone(_this.phoneNumber);
           } else {
@@ -75,6 +64,7 @@ export default {
     // 监听phoneNumber属性变化
     phoneNumber(newValue) {
       this.$bus.$emit('setMarkPhone', newValue);
+      this.setPhone('');
     }
   }
 }

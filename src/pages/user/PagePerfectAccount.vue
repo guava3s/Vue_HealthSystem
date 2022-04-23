@@ -23,15 +23,16 @@
 </template>
 
 <script>
-import MyPassword from "@/components/MyPassword";
-import {mixin_LoginAndRegister} from "@/util/mixin_LoginAndRegister";
+import MyPassword from "@/components/user/MyPassword";
+import {mixin_LoginAndRegister} from "@/mixin/mixin_LoginAndRegister";
 import {mapMutations, mapState} from "vuex";
-import {prompts} from "@/util/mixin_prompt";
+import {prompts} from "@/mixin/mixin_prompt";
+import {mixin_routerChange} from "@/mixin/mixin_routerChange";
 
 export default {
   name: "PagePerfectAccount",
   components: {MyPassword},
-  mixins: [mixin_LoginAndRegister],
+  mixins: [mixin_LoginAndRegister,mixin_routerChange],
   data() {
     return {
       username: ''
@@ -66,9 +67,7 @@ export default {
             prompts.methods.successPrompt(data.data.message);
           }
           // 跳转至登录页面
-          _this.$router.replace({
-            name: 'r-login'
-          });
+          _this.replacePage('r-login');
         });
       } else {
         prompts.methods.errorPrompt('请输入信息');

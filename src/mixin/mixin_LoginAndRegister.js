@@ -29,16 +29,6 @@ const mixin_LoginAndRegister = {
         resetAll() {
             this.mark.markOther = false;
             this.mark.markCheck = false;
-        },
-        pushPage(name) {
-            this.$router.push({
-                name: name
-            });
-        },
-        replacePage(name){
-            this.$router.replace({
-                name: name
-            });
         }
     },
     watch: {
