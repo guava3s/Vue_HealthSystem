@@ -59,7 +59,7 @@ export default {
     ...mapState('user', ['Phone'])
   },
   methods: {
-    ...mapMutations('user',['flushAllProperty']),
+    ...mapMutations('user', ['flushAllProperty']),
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -92,5 +92,7 @@ export default {
   top: 0;
   background-color: #122442; /*藏青色*/
 }
-
+.el-menu-item:hover {
+  background-color: cornflowerblue;
+}
 </style>

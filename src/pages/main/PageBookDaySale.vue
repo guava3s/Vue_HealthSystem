@@ -1,16 +1,15 @@
 <template>
-  <div class="my-content">
-    <h2>你好啊 骚逼</h2>
+  <div>
+    null
   </div>
 </template>
 
 <script>
 export default {
-  name: "MyContent"
+  name: "PageBookDaySale"
 }
 </script>
 
 <style scoped>
-
 
 </style>

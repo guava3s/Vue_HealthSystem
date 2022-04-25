@@ -4,9 +4,11 @@
     <MyHeader/>
     <!--侧边栏-->
     <MySideBar/>
-    <el-container>
+    <!--    <el-container>-->
+    <div>
       <router-view></router-view>
-    </el-container>
+    </div>
+    <!--    </el-container>-->
   </div>
 </template>
 
@@ -20,7 +22,7 @@ export default {
   components: {MySideBar, MyHeader},
   mixins: [mixin_routerChange],
   mounted() {
-    this.replacePage('originContent');
+    this.replacePage('r-originContent');
   }
 }
 </script>

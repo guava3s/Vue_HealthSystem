@@ -9,16 +9,17 @@ import MyVerify from "@/components/user/MyVerify";
 import PagePerfectAccount from "@/pages/user/PagePerfectAccount";
 import PageResetPassword from "@/pages/user/PageResetPassword";
 import MyContent from "@/components/main/MyContent";
+import PageBookManagement from "@/pages/main/PageBookManagement";
+import PageBookRepository from "@/pages/main/PageBookRepository";
+import PageBookDaySale from "@/pages/main/PageBookDaySale";
 
 // 独立页面
-export const independent = [
+export const independentPages = [
     // 初始页面
     {
         path: '/',
         redirect: '/pageLogin'
-    },
-    // 登录
-    {
+    }, {
         name: 'r-login',
         path: '/pageLogin',
         component: PageLogin,
@@ -26,7 +27,6 @@ export const independent = [
             title: '登录'
         },
         children: [
-            // 切换密码登录
             {
                 name: 'r-password',
                 path: 'myPassword',
@@ -34,9 +34,7 @@ export const independent = [
                 meta: {
                     title: '用户登录'
                 }
-            },
-            // 切换短信验证登录
-            {
+            }, {
                 name: 'r-verify',
                 path: 'myVerify',
                 component: MyVerify,
@@ -45,23 +43,16 @@ export const independent = [
                 }
             }
         ]
-    },
-    // 注册页面
-    {
+    }, {
         name: 'r-register',
         path: '/pageRegistration',
         component: PageRegistration,
         meta: {title: '注册页面'}
-    },
-    // 完善账号页面
-    {
+    }, {
         name: 'r-perfect',
         path: '/pagePerfectAccount',
         component: PagePerfectAccount,
-        meta: {
-            title: '完善用户信息',
-            isAuth: true
-        },
+        meta: {title: '完善用户信息', isAuth: true},
         beforeEnter: (to, from, next) => {
             if (from.name === 'r-register') {
                 next();
@@ -69,15 +60,11 @@ export const independent = [
                 return alert('拒绝访问');
             }
         }
-    },
-    // 找回密码页面
-    {
+    }, {
         name: 'r-resetVerify',
         path: '/pageResetPassword',
         component: PageResetPassword,
-        meta: {
-            title: '找回密码'
-        },
+        meta: {title: '找回密码'},
         children: [
             // 使用密码框
             {
@@ -91,20 +78,17 @@ export const independent = [
                         return alert("拒绝访问");
                     }
                 }
-            },
-            // 切换短信验证登录
-            {
+            }, {
                 name: 'r-use-verify',
                 path: 'putVerify',
                 component: MyVerify,
-                meta: {
-                    title: '短信验证'
-                }
+                meta: {title: '短信验证'}
             }
         ]
     }
 ];
 
+// 后台管理页面
 export const modulePages = [
     // 网站首页
     {
@@ -114,9 +98,30 @@ export const modulePages = [
         meta: {title: '健康系统首页'},
         children: [
             {
-                name: 'originContent',
-                path: '/myContent',
-                component: MyContent
+                name: 'r-originContent',
+                path: 'myContent',
+                component: MyContent,
+                meta: {title: '初始内容'}
+            }, {
+                name: 'r-bookManagement',
+                path: 'pageBookManagement',
+                component: PageBookManagement,
+                meta: {title: '图书管理'}
+            }, {
+                name: 'r-bookRepository',
+                path: 'pageBookRepository',
+                component: PageBookRepository,
+                meta: {title: '图书仓库'}
+            }, {
+                name: 'r-bookDaySale',
+                path: 'pageBookDaySale',
+                component: PageBookDaySale,
+                meta: {title: '日销售额'}
+            }, {
+                name: 'r-bookMonthSale',
+                path: 'pageBookRepository',
+                component: PageBookRepository,
+                meta: {title: '月销售额'}
             }
         ]
     }
@@ -127,7 +132,7 @@ export const modulePages = [
 const createRouter = () => new VueRouter({
     mode: 'history',
     base: '/st/',
-    routes: independent.concat(modulePages)
+    routes: independentPages.concat(modulePages)
 });
 
 // 真实路由器

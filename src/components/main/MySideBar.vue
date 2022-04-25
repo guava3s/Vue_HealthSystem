@@ -3,20 +3,20 @@
     <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen"
              active-text-color="#e0b12e" text-color="#EDF0F6FF"
              @close="handleClose">
-      <el-menu-item index="1">
+      <el-menu-item index="1" class="el-menu-item">
         <span slot="title">你好{{ username }}</span>
       </el-menu-item>
-      <el-submenu index="2">
+
+      <el-submenu index="2" class="el-menu-item">
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>导航一</span>
         </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
+        <el-menu-item-group title="分组1" class="el-menu-item">
           <el-menu-item index="1-1">选项1</el-menu-item>
           <el-menu-item index="1-2">选项2</el-menu-item>
         </el-menu-item-group>
-        <el-menu-item-group title="分组2">
+        <el-menu-item-group title="分组2" class="el-menu-item">
           <el-menu-item index="1-3">选项3</el-menu-item>
         </el-menu-item-group>
         <el-submenu index="1-4">
@@ -24,15 +24,16 @@
           <el-menu-item index="1-4-1">选项1</el-menu-item>
         </el-submenu>
       </el-submenu>
-      <el-menu-item index="3">
+
+      <el-menu-item index="3" class="el-menu-item">
         <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
+        <span slot="title" @click="replacePage('r-bookRepository')">图书仓库</span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="4" class="el-menu-item">
         <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
+        <span slot="title" @click="replacePage('r-bookManagement')">图书管理</span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="5" class="el-menu-item">
         <i class="el-icon-setting"></i>
         <span slot="title">导航四</span>
       </el-menu-item>
@@ -42,16 +43,18 @@
 
 <script>
 import {mapState} from "vuex";
+import {mixin_routerChange} from "@/mixin/mixin_routerChange";
 
 export default {
   name: "MySideBar",
+  mixins: [mixin_routerChange],
   data() {
     return {
       username: this.UserName
     }
   },
   computed: {
-    ...mapState('user',['UserName'])
+    ...mapState('user', ['UserName'])
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -72,5 +75,9 @@ export default {
   bottom: 0;
   left: 0;
   background-color: #25394d;
+}
+
+.el-menu-item:hover {
+  background-color: cornflowerblue;
 }
 </style>

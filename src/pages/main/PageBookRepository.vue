@@ -1,16 +1,18 @@
 <template>
-  <div class="my-content">
-    <h2>你好啊 骚逼</h2>
+  <div>
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "MyContent"
+  name: "PageBookRepository",
+  mounted() {
+    alert("嘿嘿");
+  }
 }
 </script>
 
 <style scoped>
-
 
 </style>
