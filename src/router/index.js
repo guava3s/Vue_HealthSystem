@@ -8,10 +8,10 @@ import MyPassword from "@/components/user/MyPassword";
 import MyVerify from "@/components/user/MyVerify";
 import PagePerfectAccount from "@/pages/user/PagePerfectAccount";
 import PageResetPassword from "@/pages/user/PageResetPassword";
-import MyContent from "@/components/main/MyContent";
 import PageBookManagement from "@/pages/main/PageBookManagement";
 import PageBookRepository from "@/pages/main/PageBookRepository";
 import PageBookDaySale from "@/pages/main/PageBookDaySale";
+import PageHistoryBrowse from "@/pages/main/PageHistoryBrowse";
 
 // 独立页面
 export const independentPages = [
@@ -98,10 +98,10 @@ export const modulePages = [
         meta: {title: '健康系统首页'},
         children: [
             {
-                name: 'r-originContent',
-                path: 'myContent',
-                component: MyContent,
-                meta: {title: '初始内容'}
+                name: 'r-historyRecordContent',
+                path: 'pageHistoryBrowse',
+                component: PageHistoryBrowse,
+                meta: {title: '历史浏览'}
             }, {
                 name: 'r-bookManagement',
                 path: 'pageBookManagement',

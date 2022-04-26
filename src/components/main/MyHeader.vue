@@ -1,9 +1,10 @@
 <template>
-  <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal"
+  <el-menu :default-active="activeIndex2" mode="horizontal"
            @select="handleSelect"
            text-color="#EDF0F6FF" active-text-color="#e0b12e">
-    <el-menu-item index="1">处理中心</el-menu-item>
-    <el-submenu index="2">
+
+    <el-menu-item index="1" style="color: black">处理中心</el-menu-item>
+    <el-submenu index="2" style="color: black">
       <template slot="title">我的工作台</template>
       <el-menu-item index="2-1">选项1</el-menu-item>
       <el-menu-item index="2-2">选项2</el-menu-item>
@@ -15,8 +16,8 @@
         <el-menu-item index="2-4-3">选项3</el-menu-item>
       </el-submenu>
     </el-submenu>
-    <el-menu-item index="3">消息中心</el-menu-item>
-    <el-menu-item index="4">
+    <el-menu-item index="3" style="color: black">消息中心</el-menu-item>
+    <el-menu-item index="4" style="color: black">
       <a href="https://www.ele.me" target="_blank">订单管理</a>
     </el-menu-item>
 
@@ -85,13 +86,10 @@ export default {
 }
 </script>
 <style scoped>
-.el-menu-demo {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  background-color: #122442; /*藏青色*/
+.header-item {
+  color: black;
 }
+
 .el-menu-item:hover {
   background-color: cornflowerblue;
 }

@@ -1,41 +1,27 @@
 <template>
   <el-col :span="12">
-    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen"
-             active-text-color="#e0b12e" text-color="#EDF0F6FF"
+    <el-menu default-active="2" @open="handleOpen"
+             active-text-color="#e0b12e" text-color="black"
              @close="handleClose">
-      <el-menu-item index="1" class="el-menu-item">
-        <span slot="title">你好{{ username }}</span>
+      <el-menu-item index="1" class="el-menu-item" @click="replacePage('r-historyRecordContent')">
+        <i class="el-icon-time"></i>
+        <span slot="title">最近</span>
       </el-menu-item>
-
-      <el-submenu index="2" class="el-menu-item">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group title="分组1" class="el-menu-item">
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2" class="el-menu-item">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-
-      <el-menu-item index="3" class="el-menu-item">
-        <i class="el-icon-menu"></i>
-        <span slot="title" @click="replacePage('r-bookRepository')">图书仓库</span>
+      <el-menu-item index="2" class="el-menu-item" @click="replacePage('r-bookRepository')">
+        <i class="el-icon-notebook-1"></i>
+        <span slot="title">图书仓库</span>
       </el-menu-item>
-      <el-menu-item index="4" class="el-menu-item">
-        <i class="el-icon-document"></i>
-        <span slot="title" @click="replacePage('r-bookManagement')">图书管理</span>
+      <el-menu-item index="3" class="el-menu-item" @click="replacePage('r-bookManagement')">
+        <i class="el-icon-notebook-2"></i>
+        <span slot="title">图书管理</span>
+      </el-menu-item>
+      <el-menu-item index="4" class="el-menu-item" @click="replacePage('r-bookManagement')">
+        <i class="el-icon-s-order"></i>
+        <span slot="title">订单管理</span>
       </el-menu-item>
       <el-menu-item index="5" class="el-menu-item">
         <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
+        <span slot="title">系统设置</span>
       </el-menu-item>
     </el-menu>
   </el-col>
@@ -68,16 +54,13 @@ export default {
 </script>
 
 <style scoped>
-.el-menu-vertical-demo {
-  width: 200px;
-  position: fixed;
-  top: 60px;
-  bottom: 0;
-  left: 0;
-  background-color: #25394d;
+.el-menu-item {
+  background-color: #f5f5f5;
 }
 
 .el-menu-item:hover {
-  background-color: cornflowerblue;
+  background-color: #e2e7ee;
+  /*设置圆角边框*/
+  border-radius: 10px;
 }
 </style>

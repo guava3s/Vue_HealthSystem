@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "MyContent"
+  name: "PageHistoryBrowse"
 }
 </script>
 
